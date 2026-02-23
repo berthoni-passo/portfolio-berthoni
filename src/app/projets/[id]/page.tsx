@@ -17,7 +17,8 @@ type Project = {
 };
 
 export default function ProjectDetail({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = use(params);
+    const resolvedParams = use(params);
+    const id = resolvedParams.id;
     const [project, setProject] = useState<Project | null>(null);
     const [likes, setLikes] = useState(0);
     const [hasLiked, setHasLiked] = useState(false);
@@ -43,12 +44,14 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
         // Fetch project data (avec mock si API non dispo)
         fetch(`http://localhost:8000/api/projects/${id}`)
             .then(res => {
-                if (!res.ok) throw new Error("Projet non trouvé");
+                if (!res.ok) {
+                    throw new Error("Projet non trouvé via API");
+                }
                 return res.json();
             })
             .then(data => setProject(data))
             .catch(err => {
-                console.error(err);
+                console.warn("Backend indisponible ou projet manquant, utilisation des données simulées (mock).", err.message);
                 // Données mockées pour que la démo fonctionne côté front
                 setProject({
                     id: parseInt(id),

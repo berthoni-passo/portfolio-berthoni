@@ -2,14 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Navbar from "./components/Navbar";
-import dynamic from "next/dynamic";
 import ParticlesCanvas from "./components/ParticlesCanvas";
-
-// Chargement dynamique du composant 3D pour empêcher Next.js de l'exécuter côté serveur (SSR)
-const Hero3DObject = dynamic(() => import("./components/Hero3DObject"), {
-  ssr: false,
-  loading: () => <div style={{ width: 300, height: 300, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)" }}>Initialisation 3D...</div>
-});
 
 // ─── Typewriter Hook ───
 function useTypewriter(texts: string[], speed = 80, pause = 2000) {
@@ -48,7 +41,7 @@ function useTypewriter(texts: string[], speed = 80, pause = 2000) {
 // ─── Skills ───
 const skills = [
   "Data Engineering", "Machine Learning", "IoT & Embarqué",
-  "AWS Cloud", "Oracle 23ai", "Python", "LangGraph", "Streamlit",
+  "Microsoft Fabric", "Oracle 23ai", "Python", "LangGraph", "Streamlit",
 ];
 
 // ─── Stats ───
@@ -61,11 +54,11 @@ const stats = [
 
 export default function HomePage() {
   const tagline = useTypewriter([
-    "Data Engineer passionné",
-    "ML Specialist",
-    "IoT & Cloud Architect",
-    "Développeur Full Stack",
-    "Chercheur en IA",
+    "Expert Data Engineering & Analytics",
+    "Développeur IA & Machine Learning",
+    "Spécialiste Microsoft Fabric & Power BI",
+    "Créateur de pipelines de données (ETL)",
+    "Architecte de solutions Cloud (AWS/Azure)",
   ]);
 
   return (
@@ -188,11 +181,53 @@ export default function HomePage() {
                       flexWrap: "wrap",
                     }}
                   >
-                    <span>📍 France</span>
+                    <span>🌍 Paris, France</span>
                     <span style={{ color: "var(--border)" }}>•</span>
-                    <span>🎓 Data Engineering & IA</span>
+                    <span>🎓 Data Analyst / Data Engineer / AI Enthusiast</span>
                     <span style={{ color: "var(--border)" }}>•</span>
-                    <span>☁️ AWS Certified</span>
+                    <a
+                      href="https://learn.microsoft.com/en-us/users/berthoniromarionjimohpasso-8883/credentials/4cc2c9981c240652"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: "inherit", textDecoration: "none", transition: "color 0.2s ease", display: "flex", alignItems: "center", gap: "6px" }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = "var(--accent-blue)"}
+                      onMouseLeave={(e) => e.currentTarget.style.color = "inherit"}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 2L30 10V22L16 30L2 22V10L16 2Z" fill="url(#fabricGrad)" />
+                        <path d="M16 4.3L28 11.2V20.8L16 27.7L4 20.8V11.2L16 4.3Z" fill="#1E1E1E" />
+                        <path d="M16 8L24 12V18L16 22L8 18V12L16 8Z" fill="url(#fabricGrad2)" />
+                        <defs>
+                          <linearGradient id="fabricGrad" x1="2" y1="2" x2="30" y2="30" gradientUnits="userSpaceOnUse">
+                            <stop stopColor="#0B556D" />
+                            <stop offset="1" stopColor="#1E93B3" />
+                          </linearGradient>
+                          <linearGradient id="fabricGrad2" x1="8" y1="8" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+                            <stop stopColor="#22C8ED" />
+                            <stop offset="1" stopColor="#6EE0F5" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
+                      <span>Certifié Ms Fabric Data Engineer</span>
+                    </a>
+
+                    <span style={{ color: "var(--border)", display: "none" }} className="hide-on-mobile">•</span>
+
+                    <a
+                      href="https://learn.microsoft.com/en-us/users/berthoniromarionjimohpasso-8883/credentials/d4a2782d8a945d22"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: "inherit", textDecoration: "none", transition: "color 0.2s ease", display: "flex", alignItems: "center", gap: "6px" }}
+                      onMouseEnter={(e) => e.currentTarget.style.color = "#F2C811"}
+                      onMouseLeave={(e) => e.currentTarget.style.color = "inherit"}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="4" y="20" width="6" height="10" fill="#E6AD10" />
+                        <rect x="13" y="12" width="6" height="18" fill="#F2C811" />
+                        <rect x="22" y="4" width="6" height="26" fill="#F2E64A" />
+                      </svg>
+                      <span>Certifié Power BI Data Analyst Associate</span>
+                    </a>
                   </p>
                 </div>
               </div>
@@ -201,8 +236,8 @@ export default function HomePage() {
               <div style={{ maxWidth: "800px", marginBottom: "32px", animationDelay: "0.1s" }}
                 className="fade-in-up">
                 <h1 style={{ marginBottom: "16px", color: "var(--text-primary)" }}>
-                  Construire l&apos;avenir{" "}
-                  <span className="gradient-text">un projet à la fois</span>
+                  Transformer vos données en{" "}
+                  <span className="gradient-text">décisions stratégiques</span>
                 </h1>
                 <div
                   style={{
@@ -274,15 +309,6 @@ export default function HomePage() {
               </div>
 
             </div>
-
-            {/* Colonne de Droite : Objet 3D immersif pur */}
-            <div style={{ flex: "1 1 500px", position: "relative", height: "500px", minWidth: "320px", zIndex: 1, display: "flex", alignItems: "center", justifyContent: "center", animation: "fadeInUp 1s ease forwards" }}>
-              {/* Le réseau de neurones 3D dynamique */}
-              <div style={{ position: "absolute", right: "-30px", top: "-20px", width: "450px", height: "550px", zIndex: 1 }}>
-                <Hero3DObject />
-              </div>
-            </div>
-
           </div>
         </div>
 

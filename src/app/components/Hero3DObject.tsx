@@ -10,28 +10,28 @@ function NeuralNet() {
 
     // Générer les positions des nœuds et des connexions
     const { nodes, connections } = useMemo(() => {
-        const layers = [3, 5, 6, 4]; // Nombre de neurones par couche
+        const layers = [4, 6, 8, 7, 5]; // Nombre de neurones par couche (plus de couches)
         const nodes: THREE.Vector3[] = [];
         const connections: [THREE.Vector3, THREE.Vector3][] = [];
 
-        let layerOffset = -3;
+        let layerOffset = -8; // Démarrer plus loin sur la gauche pour occuper la largeur
         const nodesByLayer: THREE.Vector3[][] = [];
 
         // Créer les nœuds (points)
         layers.forEach((count) => {
             const layerList: THREE.Vector3[] = [];
-            const startY = ((count - 1) * 1.5) / 2;
+            const startY = ((count - 1) * 2.5) / 2; // Écarter plus verticalement
             for (let j = 0; j < count; j++) {
-                // Ajouter un bruit pour un placement plus organique
-                const x = layerOffset + (Math.random() * 0.4 - 0.2);
-                const y = startY - j * 1.5 + (Math.random() * 0.5 - 0.25);
-                const z = (Math.random() * 1.5 - 0.75);
+                // Ajouter un bruit pour un placement organique
+                const x = layerOffset + (Math.random() * 1.5 - 0.75);
+                const y = startY - j * 2.5 + (Math.random() * 1.5 - 0.75);
+                const z = (Math.random() * 4 - 2); // Plus de profondeur
                 const pos = new THREE.Vector3(x, y, z);
                 layerList.push(pos);
                 nodes.push(pos);
             }
             nodesByLayer.push(layerList);
-            layerOffset += 2;
+            layerOffset += 4; // Plus d'espace entre les couches horizontalement
         });
 
         // Créer les connexions (lignes)
@@ -51,11 +51,12 @@ function NeuralNet() {
         return { nodes, connections };
     }, []);
 
-    // Animation de rotation lente
+    // Animation de rotation lente standard
     useFrame((state) => {
         if (group.current) {
-            group.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.1) * 0.3;
-            group.current.rotation.x = Math.cos(state.clock.elapsedTime * 0.15) * 0.15;
+            // Mouvement autonome lent
+            group.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.05) * 0.15;
+            group.current.rotation.x = Math.cos(state.clock.elapsedTime * 0.08) * 0.1;
         }
     });
 
@@ -92,17 +93,17 @@ function NeuralNet() {
 
 export default function Hero3DObject() {
     return (
-        <div style={{ height: "100%", width: "100%", minHeight: "400px", position: "relative" }}>
-            <Canvas camera={{ position: [0, 0, 7], fov: 45 }}>
+        <div style={{ position: "fixed", top: 0, left: 0, width: "100%", height: "100%", zIndex: 0, opacity: 0.6 }}>
+            <Canvas camera={{ position: [0, 0, 15], fov: 60 }}>
                 <ambientLight intensity={0.5} />
-                <pointLight position={[10, 10, 10]} intensity={2} color="#818cf8" />
-                <pointLight position={[-10, -10, -10]} intensity={1} color="#2dd4bf" />
+                <pointLight position={[15, 15, 15]} intensity={2} color="#818cf8" />
+                <pointLight position={[-15, -15, -15]} intensity={1.5} color="#2dd4bf" />
 
                 <Float speed={1.5} rotationIntensity={0.5} floatIntensity={1.5}>
                     <NeuralNet />
                 </Float>
 
-                {/* Interaction utilisateur avec souris */}
+                {/* Interaction utilisateur avec la souris (Cliquer-glisser) */}
                 <OrbitControls
                     enableZoom={false}
                     enablePan={false}

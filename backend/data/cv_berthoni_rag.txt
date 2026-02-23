@@ -39,4 +39,4 @@ COMPETENCES
 •	Outils & Langages : Python (Pandas, NumPy, Scikit-learn, Matplotlib, Seaborn), R, SQL avancé, Pyspark.
 •	Dataviz : Power BI / Tableau / Qlik sense.
 •	Analyse de données : Analyse statistique avancée, Modélisation prédictive (régression, classification), feature engineering.
-•	Cloud : AWS, Azure, GCP
+•	Cloud : Microsoft Azure (Certifié Microsoft Fabric Data Engineer), AWS (Pratique, non certifié), GCP

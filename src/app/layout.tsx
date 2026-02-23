@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Chatbot from "./components/Chatbot";
+import Background3DWrapper from "./components/Background3DWrapper";
 
 export const metadata: Metadata = {
   title: "Berthoni Passo — Data Engineer & ML Specialist",
@@ -29,6 +30,7 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <Background3DWrapper />
         {children}
         <Chatbot />
       </body>
