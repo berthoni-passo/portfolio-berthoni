@@ -72,13 +72,21 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
         // Fetch likes count
         fetch(`http://localhost:8000/api/interactions/likes/project/${id}`)
             .then(res => res.json())
-            .then(data => setLikes(data.count))
+            .then(data => {
+                setLikes(data.count);
+                // Si la BDD indique 0 like mais que le localStorage dit l'inverse, 
+                // c'est que la BDD a été purgée. On réinitialise l'état local.
+                if (data.count === 0 && localStorage.getItem(`liked_project_${id}`)) {
+                    localStorage.removeItem(`liked_project_${id}`);
+                    setHasLiked(false);
+                }
+            })
             .catch(err => {
                 console.error("Likes API error", err);
-                setLikes(14); // Fallback mock
+                // setLikes(14); // Suppression du mock trompeur
             });
 
-        // Pour des raisons pratiques de l'UX, on peut stocker si on a liké en local (en plus d'avoir un rejet serveur)
+        // Pour des raisons pratiques de l'UX
         if (localStorage.getItem(`liked_project_${id}`)) {
             setHasLiked(true);
         }
@@ -91,7 +99,7 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
             const res = await fetch(`http://localhost:8000/api/interactions/likes?ip_hash=${visitorId}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ target_type: "project", target_id: parseInt(id) })
+                body: JSON.stringify({ target_type: "project", target_id: parseInt(id, 10) })
             });
             const data = await res.json();
 
@@ -100,18 +108,14 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
                 setHasLiked(true);
                 localStorage.setItem(`liked_project_${id}`, "true");
             } else {
-                // Fallback mock en cas d'erreur API bénigne
                 console.warn(data.detail || "API retour", data);
-                setLikes(l => l + 1);
-                setHasLiked(true);
-                localStorage.setItem(`liked_project_${id}`, "true");
+                if (data.detail === "Vous avez déjà liké cet élément.") {
+                    setHasLiked(true);
+                    localStorage.setItem(`liked_project_${id}`, "true");
+                }
             }
         } catch (e) {
-            console.error("API Error, fallback to local state", e);
-            // Mode démo sans backend activé
-            setLikes(l => l + 1);
-            setHasLiked(true);
-            localStorage.setItem(`liked_project_${id}`, "true");
+            console.error("API Error, fallback to local state impossible sans backend valide", e);
         }
     };
 
