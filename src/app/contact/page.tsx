@@ -4,19 +4,36 @@ import Navbar from "../components/Navbar";
 import ParticlesCanvas from "../components/ParticlesCanvas";
 
 export default function ContactPage() {
-    const [formState, setFormState] = useState({ name: "", email: "", subject: "", message: "" });
+    const [formState, setFormState] = useState({ name: "", email: "", subject: "", content: "" });
     const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setStatus("submitting");
 
-        // Simulation de l'appel AWS SES (Phase 1)
-        setTimeout(() => {
-            console.log("Form submitted:", formState);
-            setStatus("success");
-            setFormState({ name: "", email: "", subject: "", message: "" });
-        }, 1500);
+        try {
+            const res = await fetch("http://localhost:8000/api/interactions/contact", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formState)
+            });
+
+            if (res.ok) {
+                setStatus("success");
+                setFormState({ name: "", email: "", subject: "", content: "" });
+            } else {
+                setStatus("error");
+                alert("Erreur lors de l'envoi. Veuillez réessayer plus tard.");
+            }
+        } catch (error) {
+            console.error(error);
+            setStatus("error");
+            alert("Impossible de joindre le serveur. L'e-mail n'a pas pu être envoyé.");
+        } finally {
+            if (status === "submitting" || status === "idle") { // only handle completion if not success/error directly 
+                // Let the UI reflect state
+            }
+        }
     };
 
     return (
@@ -98,8 +115,8 @@ export default function ContactPage() {
                                         required
                                         rows={6}
                                         placeholder="Parlez-moi de votre projet..."
-                                        value={formState.message}
-                                        onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                                        value={formState.content}
+                                        onChange={(e) => setFormState({ ...formState, content: e.target.value })}
                                         style={{
                                             width: "100%", background: "rgba(255,255,255,0.03)", border: "1px solid var(--border)",
                                             borderRadius: "8px", padding: "12px 16px", color: "var(--text-primary)", outline: "none",

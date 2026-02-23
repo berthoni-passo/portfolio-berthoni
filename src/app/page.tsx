@@ -2,7 +2,14 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Navbar from "./components/Navbar";
+import dynamic from "next/dynamic";
 import ParticlesCanvas from "./components/ParticlesCanvas";
+
+// Chargement dynamique du composant 3D pour empêcher Next.js de l'exécuter côté serveur (SSR)
+const Hero3DObject = dynamic(() => import("./components/Hero3DObject"), {
+  ssr: false,
+  loading: () => <div style={{ width: 300, height: 300, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)" }}>Initialisation 3D...</div>
+});
 
 // ─── Typewriter Hook ───
 function useTypewriter(texts: string[], speed = 80, pause = 2000) {
@@ -102,162 +109,180 @@ export default function HomePage() {
             width: "100%",
           }}
         >
-          {/* ─── Profile Card (top-left) ─── */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "flex-start",
-              gap: "20px",
-              marginBottom: "48px",
-              animation: "fadeInUp 0.6s ease forwards",
-            }}
-          >
-            {/* Avatar */}
-            <div style={{ flexShrink: 0 }}>
-              <div
-                style={{
-                  width: "80px",
-                  height: "80px",
-                  borderRadius: "24px",
-                  background: "linear-gradient(135deg, #4f8ef7, #8b5cf6, #06b6d4)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "2rem",
-                  boxShadow: "0 8px 30px rgba(79,142,247,0.35)",
-                  border: "2px solid rgba(255,255,255,0.1)",
-                }}
-              >
-                👨‍💻
-              </div>
-            </div>
+          {/* Main Content Layout */}
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "40px" }}>
 
-            {/* Info */}
-            <div>
+            {/* Colonne de Gauche : Textes, Profil, Boutons */}
+            <div style={{ flex: "1 1 500px", zIndex: 2 }}>
+              {/* ─── Profile Card (top-left) ─── */}
               <div
                 style={{
                   display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  marginBottom: "6px",
+                  alignItems: "flex-start",
+                  gap: "20px",
+                  marginBottom: "48px",
+                  animation: "fadeInUp 0.6s ease forwards",
                 }}
               >
-                <div className="glow-dot" />
-                <span
-                  style={{
-                    fontSize: "0.8rem",
-                    color: "var(--accent-blue)",
-                    fontWeight: "600",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.08em",
-                  }}
-                >
-                  Disponible pour missions
-                </span>
-              </div>
-              <h3
-                style={{
-                  fontSize: "1.5rem",
-                  fontWeight: "800",
-                  color: "var(--text-primary)",
-                  marginBottom: "4px",
-                }}
-              >
-                Berthoni Passo
-              </h3>
-              <p
-                style={{
-                  fontSize: "0.9rem",
-                  color: "var(--text-secondary)",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  flexWrap: "wrap",
-                }}
-              >
-                <span>📍 France</span>
-                <span style={{ color: "var(--border)" }}>•</span>
-                <span>🎓 Data Engineering & IA</span>
-                <span style={{ color: "var(--border)" }}>•</span>
-                <span>☁️ AWS Certified</span>
-              </p>
-            </div>
-          </div>
+                {/* Avatar */}
+                <div style={{ flexShrink: 0, position: "relative" }}>
+                  <div
+                    style={{
+                      width: "80px",
+                      height: "80px",
+                      borderRadius: "24px",
+                      background: "url('/img/berthoni_thinking.png.jpeg') center/cover, linear-gradient(135deg, #4f8ef7, #8b5cf6, #06b6d4)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "2rem",
+                      boxShadow: "0 8px 30px rgba(79,142,247,0.35)",
+                      border: "2px solid rgba(255,255,255,0.1)",
+                      overflow: "hidden"
+                    }}
+                  >
+                    <span style={{ opacity: 0 }} title="Remplacez /public/img/berthoni_thinking.png pour voir votre portrait">👨‍💻</span>
+                  </div>
+                </div>
 
-          {/* ─── Main Headline ─── */}
-          <div style={{ maxWidth: "800px", marginBottom: "32px", animationDelay: "0.1s" }}
-            className="fade-in-up">
-            <h1 style={{ marginBottom: "16px", color: "var(--text-primary)" }}>
-              Construire l&apos;avenir{" "}
-              <span className="gradient-text">un projet à la fois</span>
-            </h1>
-            <div
-              style={{
-                fontSize: "clamp(1.1rem, 2.5vw, 1.4rem)",
-                color: "var(--text-secondary)",
-                display: "flex",
-                alignItems: "center",
-                gap: "0",
-                minHeight: "2rem",
-              }}
-            >
-              <span>{tagline}</span>
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "2px",
-                  height: "1.2em",
-                  background: "var(--accent-blue)",
-                  marginLeft: "2px",
-                  animation: "pulse 1s infinite",
-                }}
-              />
-            </div>
-          </div>
-
-          {/* ─── CTA Buttons ─── */}
-          <div
-            style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginBottom: "56px" }}
-            className="fade-in-up"
-          >
-            <Link href="/projets" className="btn-primary">
-              🚀 Voir mes projets
-            </Link>
-            <Link href="/a-propos" className="btn-secondary">
-              📄 Télécharger mon CV
-            </Link>
-          </div>
-
-          {/* ─── Skill Tags ─── */}
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "8px",
-              marginBottom: "80px",
-            }}
-          >
-            {skills.map((skill) => (
-              <span key={skill} className="tag">{skill}</span>
-            ))}
-          </div>
-
-          {/* ─── Stats ─── */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-              gap: "16px",
-            }}
-          >
-            {stats.map((s) => (
-              <div key={s.label} className="stat-card glass-card">
-                <div className="stat-number">{s.value}</div>
-                <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginTop: "4px" }}>
-                  {s.label}
+                {/* Info */}
+                <div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      marginBottom: "6px",
+                    }}
+                  >
+                    <div className="glow-dot" />
+                    <span
+                      style={{
+                        fontSize: "0.8rem",
+                        color: "var(--accent-blue)",
+                        fontWeight: "600",
+                        textTransform: "uppercase",
+                        letterSpacing: "0.08em",
+                      }}
+                    >
+                      Disponible pour missions
+                    </span>
+                  </div>
+                  <h3
+                    style={{
+                      fontSize: "1.5rem",
+                      fontWeight: "800",
+                      color: "var(--text-primary)",
+                      marginBottom: "4px",
+                    }}
+                  >
+                    Berthoni Passo
+                  </h3>
+                  <p
+                    style={{
+                      fontSize: "0.9rem",
+                      color: "var(--text-secondary)",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <span>📍 France</span>
+                    <span style={{ color: "var(--border)" }}>•</span>
+                    <span>🎓 Data Engineering & IA</span>
+                    <span style={{ color: "var(--border)" }}>•</span>
+                    <span>☁️ AWS Certified</span>
+                  </p>
                 </div>
               </div>
-            ))}
+
+              {/* ─── Main Headline ─── */}
+              <div style={{ maxWidth: "800px", marginBottom: "32px", animationDelay: "0.1s" }}
+                className="fade-in-up">
+                <h1 style={{ marginBottom: "16px", color: "var(--text-primary)" }}>
+                  Construire l&apos;avenir{" "}
+                  <span className="gradient-text">un projet à la fois</span>
+                </h1>
+                <div
+                  style={{
+                    fontSize: "clamp(1.1rem, 2.5vw, 1.4rem)",
+                    color: "var(--text-secondary)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0",
+                    minHeight: "2rem",
+                  }}
+                >
+                  <span>{tagline}</span>
+                  <span
+                    style={{
+                      display: "inline-block",
+                      width: "2px",
+                      height: "1.2em",
+                      background: "var(--accent-blue)",
+                      marginLeft: "2px",
+                      animation: "pulse 1s infinite",
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* ─── CTA Buttons ─── */}
+              <div
+                style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginBottom: "56px" }}
+                className="fade-in-up"
+              >
+                <Link href="/projets" className="btn-primary">
+                  🚀 Voir mes projets
+                </Link>
+                <Link href="/a-propos" className="btn-secondary">
+                  📄 Télécharger mon CV
+                </Link>
+              </div>
+
+              {/* ─── Skill Tags ─── */}
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "8px",
+                  marginBottom: "80px",
+                }}
+              >
+                {skills.map((skill) => (
+                  <span key={skill} className="tag">{skill}</span>
+                ))}
+              </div>
+
+              {/* ─── Stats ─── */}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
+                  gap: "16px",
+                }}
+              >
+                {stats.map((s) => (
+                  <div key={s.label} className="stat-card glass-card">
+                    <div className="stat-number">{s.value}</div>
+                    <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginTop: "4px" }}>
+                      {s.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+
+            {/* Colonne de Droite : Objet 3D immersif pur */}
+            <div style={{ flex: "1 1 500px", position: "relative", height: "500px", minWidth: "320px", zIndex: 1, display: "flex", alignItems: "center", justifyContent: "center", animation: "fadeInUp 1s ease forwards" }}>
+              {/* Le réseau de neurones 3D dynamique */}
+              <div style={{ position: "absolute", right: "-30px", top: "-20px", width: "450px", height: "550px", zIndex: 1 }}>
+                <Hero3DObject />
+              </div>
+            </div>
+
           </div>
         </div>
 
@@ -367,9 +392,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══ CHATBOT FLOTTANT ═══ */}
-      <ChatBot />
-
       {/* ═══ FOOTER ═══ */}
       <footer
         style={{
@@ -392,104 +414,4 @@ export default function HomePage() {
   );
 }
 
-// ─── Chatbot Flottant ───
-function ChatBot() {
-  const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { role: "bot", text: "Bonjour ! 👋 Je suis l'assistant de Berthoni. Posez-moi une question sur ses projets ou compétences !" }
-  ]);
-  const [input, setInput] = useState("");
 
-  const send = () => {
-    if (!input.trim()) return;
-    setMessages((m) => [...m, { role: "user", text: input }]);
-    // TODO: appel API RAG
-    setTimeout(() => {
-      setMessages((m) => [...m, {
-        role: "bot",
-        text: "Merci pour votre question ! Le chatbot IA sera bientôt opérationnel avec les données de Berthoni. 🚀"
-      }]);
-    }, 800);
-    setInput("");
-  };
-
-  return (
-    <div className="chat-bubble">
-      {open && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: "70px",
-            right: 0,
-            width: "320px",
-            background: "var(--bg-secondary)",
-            border: "1px solid var(--border)",
-            borderRadius: "var(--radius-lg)",
-            overflow: "hidden",
-            boxShadow: "0 20px 60px rgba(0,0,0,0.4)",
-          }}
-        >
-          {/* Header */}
-          <div style={{
-            padding: "16px",
-            background: "linear-gradient(135deg, #4f8ef7, #8b5cf6)",
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-          }}>
-            <span style={{ fontSize: "1.2rem" }}>🤖</span>
-            <div>
-              <div style={{ fontWeight: "700", fontSize: "0.9rem", color: "white" }}>Assistant IA</div>
-              <div style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.7)" }}>Posez une question sur Berthoni</div>
-            </div>
-          </div>
-
-          {/* Messages */}
-          <div style={{ height: "240px", overflowY: "auto", padding: "12px", display: "flex", flexDirection: "column", gap: "10px" }}>
-            {messages.map((msg, i) => (
-              <div key={i} style={{
-                alignSelf: msg.role === "user" ? "flex-end" : "flex-start",
-                maxWidth: "80%",
-                padding: "8px 12px",
-                borderRadius: msg.role === "user" ? "12px 12px 2px 12px" : "12px 12px 12px 2px",
-                background: msg.role === "user" ? "linear-gradient(135deg, #4f8ef7, #8b5cf6)" : "var(--bg-card)",
-                color: "var(--text-primary)",
-                fontSize: "0.8rem",
-                border: msg.role === "bot" ? "1px solid var(--border)" : "none",
-              }}>
-                {msg.text}
-              </div>
-            ))}
-          </div>
-
-          {/* Input */}
-          <div style={{ padding: "12px", borderTop: "1px solid var(--border)", display: "flex", gap: "8px" }}>
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && send()}
-              placeholder="Votre question..."
-              style={{
-                flex: 1,
-                background: "var(--bg-card)",
-                border: "1px solid var(--border)",
-                borderRadius: "8px",
-                padding: "8px 12px",
-                color: "var(--text-primary)",
-                fontSize: "0.8rem",
-                outline: "none",
-              }}
-            />
-            <button onClick={send} className="btn-primary" style={{ padding: "8px 14px", fontSize: "0.8rem" }}>
-              →
-            </button>
-          </div>
-        </div>
-      )}
-
-      <button className="chat-toggle" onClick={() => setOpen(!open)}>
-        {open ? "✕" : "🤖"}
-      </button>
-    </div>
-  );
-}

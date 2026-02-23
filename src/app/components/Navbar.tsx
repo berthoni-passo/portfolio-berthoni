@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const navLinks = [
     { href: "/", label: "Accueil" },
@@ -12,7 +13,7 @@ const navLinks = [
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
-    const [active, setActive] = useState("/");
+    const pathname = usePathname();
     const [menuOpen, setMenuOpen] = useState(false);
 
     useEffect(() => {
@@ -78,18 +79,17 @@ export default function Navbar() {
                     <Link
                         key={link.href}
                         href={link.href}
-                        onClick={() => setActive(link.href)}
                         style={{
                             padding: "8px 16px",
                             borderRadius: "8px",
                             fontSize: "0.9rem",
                             fontWeight: "500",
                             color:
-                                active === link.href
+                                pathname === link.href
                                     ? "var(--accent-blue)"
                                     : "var(--text-secondary)",
                             background:
-                                active === link.href
+                                pathname === link.href
                                     ? "rgba(79,142,247,0.1)"
                                     : "transparent",
                             transition: "all 0.2s ease",
@@ -151,11 +151,12 @@ export default function Navbar() {
                         <Link
                             key={link.href}
                             href={link.href}
-                            onClick={() => { setActive(link.href); setMenuOpen(false); }}
+                            onClick={() => setMenuOpen(false)}
                             style={{
                                 padding: "12px 16px",
                                 borderRadius: "8px",
-                                color: "var(--text-secondary)",
+                                color: pathname === link.href ? "var(--accent-blue)" : "var(--text-secondary)",
+                                background: pathname === link.href ? "rgba(79,142,247,0.1)" : "transparent",
                                 fontWeight: "500",
                             }}
                         >

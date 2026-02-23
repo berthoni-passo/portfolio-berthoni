@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Chatbot from "./components/Chatbot";
 
 export const metadata: Metadata = {
   title: "Berthoni Passo — Data Engineer & ML Specialist",
@@ -18,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -29,6 +30,7 @@ export default function RootLayout({
       </head>
       <body>
         {children}
+        <Chatbot />
       </body>
     </html>
   );

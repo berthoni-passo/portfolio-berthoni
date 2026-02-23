@@ -30,7 +30,7 @@ export default function AboutPage() {
                                 Actuellement basé en France, je travaille sur des projets intégrant des technologies de pointe comme LangGraph, AWS Bedrock et Oracle 23ai pour créer des solutions IA de nouvelle génération (RAG).
                             </p>
 
-                            <div style={{ display: "flex", gap: "16px" }}>
+                            <div style={{ display: "flex", gap: "16px", marginTop: "40px" }}>
                                 <a href="/CV_Berthoni_Passo.pdf" download className="btn-primary">
                                     📥 Télécharger CV (PDF)
                                 </a>
@@ -42,19 +42,14 @@ export default function AboutPage() {
 
                         {/* Photo / Visual */}
                         <div style={{ animation: "fadeInUp 0.8s ease forwards" }} className="animate-float">
-                            <div className="glass-card" style={{ padding: "10px", borderRadius: "32px", overflow: "hidden" }}>
+                            <div className="glass-card" style={{ padding: "12px", borderRadius: "32px", overflow: "hidden" }}>
                                 <div style={{
                                     aspectRatio: "1/1",
-                                    background: "linear-gradient(135deg, #4f8ef722, #8b5cf622)",
+                                    background: "url('/img/berthoni_thinking.png.jpeg') center/cover, linear-gradient(135deg, #4f8ef722, #8b5cf622)",
                                     borderRadius: "24px",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    fontSize: "5rem",
-                                    border: "1px dashed var(--border-hover)"
-                                }}>
-                                    👨‍💻
-                                </div>
+                                    border: "1px solid var(--border-hover)",
+                                    boxShadow: "0 10px 30px rgba(0,0,0,0.5)"
+                                }} />
                             </div>
                         </div>
                     </div>
