@@ -20,14 +20,13 @@ export default function AboutPage() {
                         {/* Bio */}
                         <div style={{ animation: "fadeInUp 0.6s ease forwards" }}>
                             <p style={{ fontSize: "1.1rem", marginBottom: "24px", color: "var(--text-primary)" }}>
-                                Je suis un développeur passionné par l'exploitation des données et l'intelligence artificielle pour résoudre des problèmes concrets.
+                                Ingénieur Data & IA doublement certifié (Microsoft Fabric Data Engineer Associate & Power BI Data Analyst), je transforme la donnée brute en leviers de performance stratégiques.
                             </p>
                             <p style={{ marginBottom: "20px" }}>
-                                Mon expertise s'étend de la conception d'architectures **Data Engineering** robustes (Oracle, AWS) à l'implémentation de modèles de **Machine Learning** avancés.
-                                J'aime particulièrement le domaine de l'**IoT** (Internet of Things) et comment les agents intelligents peuvent interagir avec le monde physique.
+                                Fort de mon expérience combinée en Data Engineering et en Analyse de Données, je maîtrise l'intégralité du cycle de valorisation de la donnée. Je conçois et déploie des pipelines automatisés complexes (ETL) et modèle les données pour proposer des Dashboards (Power BI, Qlik Sense) à très fort impact décisionnel, tout en réduisant les coûts opérationnels grâce à l'automatisation.
                             </p>
                             <p style={{ marginBottom: "32px" }}>
-                                Actuellement basé en France, je travaille sur des projets intégrant des technologies de pointe comme LangGraph, AWS Bedrock et Oracle 23ai pour créer des solutions IA de nouvelle génération (RAG).
+                                Passionné par l'Intelligence Artificielle hybride, je conçois également des architectures avancées intégrant le Machine Learning, les LLM (RAG, LangGraph) et le Cloud pour répondre aux enjeux d'innovation des entreprises et multiplier leur ROI.
                             </p>
 
                             <div style={{ display: "flex", gap: "16px", marginTop: "40px" }}>
