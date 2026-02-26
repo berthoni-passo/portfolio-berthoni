@@ -44,12 +44,19 @@ def ask_claude(prompt: str, context: str) -> str:
     Send prompt + RAG context to Claude 3 Haiku for blazing fast, cheap generation.
     """
     system_prompt = (
-        "Tu es l'assistant personnel de Berthoni Passo, intégré directement sur son portfolio. "
-        "Ton rôle est de répondre aux questions des visiteurs (recruteurs, collaborateurs) de manière concise, chaleureuse et professionnelle. "
-        "IMPORTANT : Ne mentionne JAMAIS que tu te bases sur un 'contexte' ou des 'informations fournies'. Réponds le plus naturellement possible "
-        "comme si tu connaissais intimement Berthoni. Ne fais pas de longues phrases d'introduction du type 'Voici un résumé des compétences...' "
-        "Si on te demande ce qu'il sait faire, cite directement ses compétences.\n\n"
-        f"INFORMATIONS SUR BERTHONI:\n{context}"
+        "Tu es l'assistant personnel IA de Berthoni Passo sur son portfolio. "
+        "Ton but est de répondre aux questions de manière ULTRA-CONCISE, naturelle et directe, comme dans un chat (WhatsApp/Slack). "
+        "RÈGLES ABSOLUES DE FORMATAGE :\n"
+        "- Écris TOUJOURS ta réponse en UN SEUL PARAGRAPHE, fluide comme un vrai message.\n"
+        "- AUCUN RETOUR À LA LIGNE, JAMAIS.\n"
+        "- INTERDICTION STRICTE d'utiliser des listes de formatage, des puces (- ou *), ou d'énumérer point par point.\n"
+        "- 1 à 3 phrases MAXIMUM au total.\n"
+        "- Pas d'introduction bateau type 'Voici ce qu'il peut faire...'. Donne juste la réponse directement.\n\n"
+        "RÈGLES DE CONTENU :\n"
+        "- Valorise son expertise Data Analyst / Data Engineer et sa certification Microsoft Fabric Data Engineer Associate.\n"
+        "- Tu as été conçu de A à Z par Berthoni lui-même, c'est ton créateur !\n"
+        "- Ignore son passé d'agronome sauf question directe dessus.\n\n"
+        f"CONTEXTE SUR BERTHONI:\n{context}"
     )
     
     try:
@@ -80,3 +87,59 @@ def ask_claude(prompt: str, context: str) -> str:
     except ClientError as e:
         print(f"Error calling Claude on Bedrock: {e}")
         raise
+
+def ask_claude_stream(prompt: str, context: str):
+    """
+    Send prompt + RAG context to Claude 3 Haiku using response stream.
+    Yields chunks of text as they arrive.
+    """
+    system_prompt = (
+        "Tu es l'assistant personnel IA de Berthoni Passo sur son portfolio. "
+        "Ton but est de répondre aux questions de manière ULTRA-CONCISE, naturelle et directe, comme dans un chat (WhatsApp/Slack). "
+        "RÈGLES ABSOLUES DE FORMATAGE :\n"
+        "- Écris TOUJOURS ta réponse en UN SEUL PARAGRAPHE, fluide comme un vrai message.\n"
+        "- AUCUN RETOUR À LA LIGNE, JAMAIS.\n"
+        "- INTERDICTION STRICTE d'utiliser des listes de formatage, des puces (- ou *), ou d'énumérer point par point.\n"
+        "- 1 à 3 phrases MAXIMUM au total.\n"
+        "- Pas d'introduction bateau type 'Voici ce qu'il peut faire...'. Donne juste la réponse directement.\n\n"
+        "RÈGLES DE CONTENU :\n"
+        "- Valorise son expertise Data Analyst / Data Engineer et sa certification Microsoft Fabric Data Engineer Associate.\n"
+        "- Tu as été conçu de A à Z par Berthoni lui-même, c'est ton créateur !\n"
+        "- Ignore son passé d'agronome sauf question directe dessus.\n\n"
+        f"CONTEXTE SUR BERTHONI:\n{context}"
+    )
+
+    try:
+        body = json.dumps({
+            "anthropic_version": "bedrock-2023-05-31",
+            "max_tokens": 500,
+            "system": system_prompt,
+            "messages": [
+                {
+                    "role": "user",
+                    "content": [{"type": "text", "text": prompt}]
+                }
+            ],
+            "temperature": 0.3,
+            "top_p": 0.9,
+        })
+
+        response = bedrock_runtime.invoke_model_with_response_stream(
+            body=body,
+            modelId=CLAUDE_CHAT_MODEL,
+            accept='application/json',
+            contentType='application/json'
+        )
+
+        # Les chunks arrivent sous forme d'événements
+        for event in response.get('body'):
+            chunk = event.get('chunk')
+            if chunk:
+                # Décoder le JSON du chunk
+                chunk_obj = json.loads(chunk.get('bytes').decode())
+                if chunk_obj['type'] == 'content_block_delta':
+                    yield chunk_obj['delta']['text']
+
+    except ClientError as e:
+        print(f"Error streaming Claude on Bedrock: {e}")
+        yield "Désolé, une erreur s'est produite lors de la génération de la réponse."

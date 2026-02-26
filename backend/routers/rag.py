@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from typing import List, Dict, Any
@@ -85,11 +86,16 @@ def ask_chatbot(question: str, db: Session = Depends(get_db)):
     context_str = "\n\n".join([f"[{d.source}] {d.content}" for d in docs])
     
     if not context_str:
-        return {"answer": "Je suis l'assistant de Berthoni. La base de connaissances est actuellement vide, je ne peux pas encore répondre à vos questions sur son profil !"}
+        def empty_stream():
+            yield "Je suis l'assistant de Berthoni. La base de connaissances est actuellement vide, je ne peux pas encore répondre à vos questions sur son profil !"
+        return StreamingResponse(empty_stream(), media_type="text/plain")
 
-    # 3. Interroger Claude
+    # 3. Interroger Claude en streaming
     try:
-        claude_response = bedrock_service.ask_claude(prompt=question, context=context_str)
-        return {"answer": claude_response}
+        def stream_generator():
+            for chunk in bedrock_service.ask_claude_stream(prompt=question, context=context_str):
+                yield chunk
+
+        return StreamingResponse(stream_generator(), media_type="text/plain")
     except Exception as e:
         raise HTTPException(status_code=500, detail="Erreur du LLM Claude.")

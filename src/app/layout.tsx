@@ -4,13 +4,43 @@ import Chatbot from "./components/Chatbot";
 import Background3DWrapper from "./components/Background3DWrapper";
 
 export const metadata: Metadata = {
-  title: "Berthoni Passo — Data Engineer & ML Specialist",
-  description: "Portfolio professionnel de Berthoni Passo : projets IoT, Machine Learning, Data Engineering, et plus encore.",
-  keywords: ["Data Engineer", "Machine Learning", "IoT", "AWS", "Oracle", "Portfolio"],
+  title: "Berthoni Passo | Data Engineer & Architecte IA",
+  description: "Portfolio de Berthoni Passo, Ingénieur Data & IA doublement certifié Microsoft Fabric & Power BI. Solutions Cloud, ETL, Dashboards & Machine Learning.",
+  keywords: ["Berthoni Passo", "Data Engineer Paris", "Data Analyst", "Machine Learning", "Microsoft Fabric", "Power BI", "IoT", "AWS", "Oracle 23ai", "Portfolio"],
+  authors: [{ name: "Berthoni Passo", url: "https://berthoni-passo.com" }],
+  creator: "Berthoni Passo",
   openGraph: {
-    title: "Berthoni Passo — Portfolio",
-    description: "Data Engineer & ML Specialist",
+    title: "Berthoni Passo | Data Engineer & Architecte IA",
+    description: "Découvrez mes projets en Data Engineering, Machine Learning, et Cloud (AWS/Oracle). Ingénieur certifié Microsoft Fabric.",
+    url: "https://berthoni-passo.com",
+    siteName: "Portfolio Berthoni Passo",
+    images: [
+      {
+        url: "/img/berthoni_thinking.png.jpeg",
+        width: 1200,
+        height: 630,
+        alt: "Berthoni Passo - Data Engineer & AI Specialist",
+      },
+    ],
+    locale: "fr_FR",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Berthoni Passo | Data Engineer & Architecte IA",
+    description: "Ingénieur Data & IA certifié. Solutions Cloud, ETL, Dashboards & Machine Learning.",
+    images: ["/img/berthoni_thinking.png.jpeg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 

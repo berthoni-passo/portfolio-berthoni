@@ -24,6 +24,7 @@ export default function AdminProjects() {
     const [demoUrl, setDemoUrl] = useState("");
     const [powerbiUrl, setPowerbiUrl] = useState("");
     const [thumbnailS3, setThumbnailS3] = useState("");
+    const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
@@ -53,6 +54,39 @@ export default function AdminProjects() {
         e.preventDefault();
         setIsSubmitting(true);
 
+        let finalThumbnailUrl = thumbnailS3;
+
+        // 1. Upload the local file if selected
+        if (thumbnailFile) {
+            const formData = new FormData();
+            formData.append("file", thumbnailFile);
+
+            try {
+                const uploadRes = await fetch("http://localhost:8000/api/projects/upload-thumbnail", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${localStorage.getItem("admin_token")}`
+                    },
+                    body: formData
+                });
+
+                if (uploadRes.ok) {
+                    const data = await uploadRes.json();
+                    finalThumbnailUrl = data.url;
+                } else {
+                    alert("Erreur serveur lors de l'upload de l'image vers S3.");
+                    setIsSubmitting(false);
+                    return;
+                }
+            } catch (err) {
+                console.error("Upload error", err);
+                alert("Erreur réseau lors de l'upload de l'image.");
+                setIsSubmitting(false);
+                return;
+            }
+        }
+
+        // 2. Submit the project data
         const payload = {
             title,
             description,
@@ -60,7 +94,7 @@ export default function AdminProjects() {
             github_url: githubUrl || null,
             demo_url: demoUrl || null,
             powerbi_url: powerbiUrl || null,
-            thumbnail_s3: thumbnailS3 || null,
+            thumbnail_s3: finalThumbnailUrl || null,
         };
 
         try {
@@ -76,7 +110,8 @@ export default function AdminProjects() {
             if (res.ok) {
                 // Reset form
                 setTitle(""); setDescription(""); setTags("");
-                setGithubUrl(""); setDemoUrl(""); setPowerbiUrl(""); setThumbnailS3("");
+                setGithubUrl(""); setDemoUrl(""); setPowerbiUrl("");
+                setThumbnailS3(""); setThumbnailFile(null);
                 alert("✨ Projet publié avec succès !");
                 fetchProjects(); // Refresh the list
             } else {
@@ -155,7 +190,14 @@ export default function AdminProjects() {
                             </div>
 
                             <div>
-                                <label style={{ display: "block", marginBottom: "8px", fontSize: "0.9rem", color: "var(--text-secondary)" }}>Image de Couverture (URL S3 ou publique)</label>
+                                <label style={{ display: "block", marginBottom: "8px", fontSize: "0.9rem", color: "var(--text-secondary)" }}>Image de Couverture (Fichier local)</label>
+                                <input type="file" accept="image/*" onChange={e => setThumbnailFile(e.target.files?.[0] || null)} style={inputStyle} />
+                            </div>
+
+                            <div style={{ textAlign: "center", color: "var(--text-muted)", fontSize: "0.8rem" }}>OU</div>
+
+                            <div>
+                                <label style={{ display: "block", marginBottom: "8px", fontSize: "0.9rem", color: "var(--text-secondary)" }}>URL Externe (S3, web...)</label>
                                 <input type="url" value={thumbnailS3} onChange={e => setThumbnailS3(e.target.value)} style={inputStyle} placeholder="https://images.unsplash.com/..." />
                             </div>
 

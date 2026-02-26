@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Navbar from "./components/Navbar";
 import ParticlesCanvas from "./components/ParticlesCanvas";
+import { useAnalytics } from "./hooks/useAnalytics";
 
 // ─── Typewriter Hook ───
 function useTypewriter(texts: string[], speed = 80, pause = 2000) {
@@ -61,6 +62,55 @@ export default function HomePage() {
     "Architecte de solutions Cloud (AWS/Azure)",
   ]);
 
+  useAnalytics('home_view');
+
+  const [recentProjects, setRecentProjects] = useState<any[]>([
+    {
+      id: "mock1",
+      title: "IoT Multi-Agents",
+      desc: "Contrôle à distance d'appareils IoT (Tapo P100, C225) via LangGraph, AWS Bedrock et ONVIF.",
+      tags: ["LangGraph", "AWS", "IoT", "Oracle"],
+      emoji: "🏠",
+      color: "#4f8ef7",
+    },
+    {
+      id: "mock2",
+      title: "Prédiction Crypto",
+      desc: "Modèles ML (LSTM, Random Forest, Neural Prophet) pour prédire les prix des cryptomonnaies.",
+      tags: ["ML", "Python", "LSTM", "API"],
+      emoji: "📈",
+      color: "#8b5cf6",
+    },
+    {
+      id: "mock3",
+      title: "BI Oracle / Power BI",
+      desc: "Tableaux de bord dynamiques connectés à Oracle 23ai, déployés sur AWS.",
+      tags: ["Power BI", "Oracle", "AWS", "SQL"],
+      emoji: "📊",
+      color: "#06b6d4",
+    },
+  ]);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/api/projects/")
+      .then(res => res.json())
+      .then(data => {
+        if (data && Array.isArray(data) && data.length > 0) {
+          const sorted = data.sort((a: any, b: any) => b.id - a.id).slice(0, 3);
+          const formatted = sorted.map((p: any, idx: number) => ({
+            id: p.id,
+            title: p.title,
+            desc: p.description.length > 100 ? p.description.substring(0, 100) + "..." : p.description,
+            tags: p.tags ? p.tags.split(",").map((t: string) => t.trim()) : [],
+            emoji: ["🚀", "💡", "🛠️", "💻", "🧠"][idx % 5],
+            color: ["#4f8ef7", "#8b5cf6", "#06b6d4", "#f59e0b", "#ec4899"][idx % 5]
+          }));
+          setRecentProjects(formatted);
+        }
+      })
+      .catch(err => console.error("API non joignable, conservation des projets liés (mock) :", err));
+  }, []);
+
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg-primary)" }}>
       <Navbar />
@@ -106,7 +156,15 @@ export default function HomePage() {
           <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "40px" }}>
 
             {/* Colonne de Gauche : Textes, Profil, Boutons */}
-            <div style={{ flex: "1 1 500px", zIndex: 2 }}>
+            <div style={{
+              flex: "1 1 500px",
+              zIndex: 2,
+              padding: "32px",
+              borderRadius: "24px",
+              background: "transparent",
+              backdropFilter: "none",
+              border: "none",
+            }}>
               {/* ─── Profile Card (top-left) ─── */}
               <div
                 style={{
@@ -352,62 +410,55 @@ export default function HomePage() {
             marginBottom: "40px",
           }}
         >
-          {[
-            {
-              title: "IoT Multi-Agents",
-              desc: "Contrôle à distance d'appareils IoT (Tapo P100, C225) via LangGraph, AWS Bedrock et ONVIF.",
-              tags: ["LangGraph", "AWS", "IoT", "Oracle"],
-              emoji: "🏠",
-              color: "#4f8ef7",
-            },
-            {
-              title: "Prédiction Crypto",
-              desc: "Modèles ML (LSTM, Random Forest, Neural Prophet) pour prédire les prix des cryptomonnaies.",
-              tags: ["ML", "Python", "LSTM", "API"],
-              emoji: "📈",
-              color: "#8b5cf6",
-            },
-            {
-              title: "BI Oracle / Power BI",
-              desc: "Tableaux de bord dynamiques connectés à Oracle 23ai, déployés sur AWS.",
-              tags: ["Power BI", "Oracle", "AWS", "SQL"],
-              emoji: "📊",
-              color: "#06b6d4",
-            },
-          ].map((project) => (
-            <div
-              key={project.title}
-              className="glass-card"
-              style={{ padding: "28px", cursor: "pointer" }}
+          {recentProjects.map((project: any, idx: number) => (
+            <Link
+              key={project.id || idx}
+              href={typeof project.id === 'string' && project.id.startsWith("mock") ? "/projets" : `/projets/${project.id}`}
+              style={{ textDecoration: "none" }}
             >
               <div
-                style={{
-                  width: "48px",
-                  height: "48px",
-                  borderRadius: "14px",
-                  background: `linear-gradient(135deg, ${project.color}22, ${project.color}44)`,
-                  border: `1px solid ${project.color}33`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "1.5rem",
-                  marginBottom: "16px",
+                className="glass-card"
+                style={{ padding: "28px", cursor: "pointer", height: "100%", transition: "all 0.3s ease" }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.transform = "translateY(-5px)";
+                  e.currentTarget.style.borderColor = "var(--border-hover)";
+                  e.currentTarget.style.boxShadow = `0 10px 30px ${project.color}22`;
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.transform = "translateY(0)";
+                  e.currentTarget.style.borderColor = "var(--border)";
+                  e.currentTarget.style.boxShadow = "none";
                 }}
               >
-                {project.emoji}
+                <div
+                  style={{
+                    width: "48px",
+                    height: "48px",
+                    borderRadius: "14px",
+                    background: `linear-gradient(135deg, ${project.color}22, ${project.color}44)`,
+                    border: `1px solid ${project.color}33`,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "1.5rem",
+                    marginBottom: "16px",
+                  }}
+                >
+                  {project.emoji}
+                </div>
+                <h3 style={{ color: "var(--text-primary)", marginBottom: "10px" }}>
+                  {project.title}
+                </h3>
+                <p style={{ fontSize: "0.875rem", marginBottom: "16px", lineHeight: "1.6" }}>
+                  {project.desc}
+                </p>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                  {Array.isArray(project.tags) ? project.tags.map((tag: string) => (
+                    <span key={tag} className="tag" style={{ fontSize: "0.7rem" }}>{tag}</span>
+                  )) : null}
+                </div>
               </div>
-              <h3 style={{ color: "var(--text-primary)", marginBottom: "10px" }}>
-                {project.title}
-              </h3>
-              <p style={{ fontSize: "0.875rem", marginBottom: "16px", lineHeight: "1.6" }}>
-                {project.desc}
-              </p>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                {project.tags.map((tag) => (
-                  <span key={tag} className="tag" style={{ fontSize: "0.7rem" }}>{tag}</span>
-                ))}
-              </div>
-            </div>
+            </Link>
           ))}
         </div>
 

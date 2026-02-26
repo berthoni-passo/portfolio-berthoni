@@ -147,8 +147,12 @@ export default function ContactPage() {
                             <div style={{ fontWeight: "600" }}>France</div>
                         </div>
                         <div style={{ textAlign: "center" }}>
-                            <div style={{ color: "var(--text-muted)", fontSize: "0.8rem", marginBottom: "4px" }}>LinkedIn / GitHub</div>
-                            <div style={{ fontWeight: "600" }}>@berthoni-passo</div>
+                            <div style={{ color: "var(--text-muted)", fontSize: "0.8rem", marginBottom: "4px" }}>Réseaux Pro</div>
+                            <div style={{ display: "flex", gap: "12px", justifyContent: "center", marginTop: "8px" }}>
+                                <a href="https://linkedin.com/in/berthoni-passo" target="_blank" rel="noopener noreferrer" style={{ color: "var(--text-primary)", fontWeight: "600", textDecoration: "none", transition: "color 0.2s" }} onMouseOver={(e) => e.currentTarget.style.color = "var(--accent-blue)"} onMouseOut={(e) => e.currentTarget.style.color = "var(--text-primary)"}>LinkedIn</a>
+                                <span style={{ color: "var(--border)" }}>•</span>
+                                <a href="https://github.com/berthoni-passo" target="_blank" rel="noopener noreferrer" style={{ color: "var(--text-primary)", fontWeight: "600", textDecoration: "none", transition: "color 0.2s" }} onMouseOver={(e) => e.currentTarget.style.color = "var(--accent-purple)"} onMouseOut={(e) => e.currentTarget.style.color = "var(--text-primary)"}>GitHub</a>
+                            </div>
                         </div>
                     </div>
                 </div>

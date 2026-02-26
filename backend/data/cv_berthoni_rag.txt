@@ -1,6 +1,6 @@
 Data Analyst | Certifié Power BI Data Analyst Associate | certifié Ms fabric data engineer
 BERTHONI PASSO
-(+33) 06 61 22 23 77 | berthonipasso@gmail.com | 94320 Thiais, France | LinkedIn
+(+33) 06 61 22 23 77 | berthonipasso@gmail.com | Paris, France | LinkedIn
 
 Capacité d’adaptation, Autonomie, Curieux, Aisance en communication & travail d’équipe, Proactif et orienté solution
 
@@ -31,9 +31,10 @@ FORMATIONS ET DIPLOMES
 2026      Master Data Science et Stratégie – IONIS-STM Paris.	     
 2025      Master 2 Intelligence Artificielle & Big Data – IA SCHOOL Paris.
 2023      Certification Power BI PL-300 – Microsoft.
-2023      Diplôme d’ingénieur en Agronome – Université de Dschang
 
-COMPETENCES
+COMPETENCES CLES & SAVOIR-FAIRE
+•	Pilotage de projets Data de bout en bout : de l'extraction automatisée des données (ETL, Scraping) jusqu'à la modélisation (ML) et au déploiement de dashboards interactifs.
+•	IA & Assistants Conversationnels : Passionné par la création d'agents IA (comme ce chatbot !) utilisant les LLM, le RAG (Retrieval-Augmented Generation) et le NLP pour automatiser et enrichir l'expérience utilisateur.
 •	Power Automate,  SharePoint,  Microsoft  Dynamics 365,  PowerApps, Microsoft Fabric et  Excel avancé.
 •	Gestion de la donnée : Base de données (MySQL, PostgreSQL, KQL),  Data pipeline & automatisation, ETL avec Talend.
 •	Outils & Langages : Python (Pandas, NumPy, Scikit-learn, Matplotlib, Seaborn), R, SQL avancé, Pyspark.

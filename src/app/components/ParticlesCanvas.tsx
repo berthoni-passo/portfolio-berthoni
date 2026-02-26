@@ -26,14 +26,14 @@ export default function ParticlesCanvas() {
         window.addEventListener("resize", resize);
 
         // Create particles
-        for (let i = 0; i < 80; i++) {
+        for (let i = 0; i < 150; i++) {
             particles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
-                vx: (Math.random() - 0.5) * 0.4,
-                vy: (Math.random() - 0.5) * 0.4,
-                r: Math.random() * 2 + 0.5,
-                alpha: Math.random() * 0.6 + 0.2,
+                vx: (Math.random() - 0.5) * 0.6,
+                vy: (Math.random() - 0.5) * 0.6,
+                r: Math.random() * 2.5 + 1,
+                alpha: Math.random() * 0.6 + 0.4,
                 color: colors[Math.floor(Math.random() * colors.length)],
             });
         }
@@ -47,10 +47,11 @@ export default function ParticlesCanvas() {
                     const dx = particles[i].x - particles[j].x;
                     const dy = particles[i].y - particles[j].y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 120) {
+                    const maxDist = 150;
+                    if (dist < maxDist) {
                         ctx.beginPath();
-                        ctx.strokeStyle = `rgba(79,142,247,${0.12 * (1 - dist / 120)})`;
-                        ctx.lineWidth = 0.5;
+                        ctx.strokeStyle = `rgba(79, 142, 247, ${0.4 * (1 - dist / maxDist)})`;
+                        ctx.lineWidth = 1;
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
                         ctx.stroke();

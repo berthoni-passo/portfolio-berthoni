@@ -86,12 +86,13 @@ export default function LabPage() {
                                     <p style={{ fontSize: "0.8rem", marginTop: "10px" }}>(URL : {activeDemo?.iframeUrl})</p>
                                 </div>
 
-                                {/* Uncomment below to embed real Streamlit app */}
-                                {/* <iframe 
-                                    src={activeDemo?.iframeUrl} 
+                                {/* Composant iFrame pour Streamlit */}
+                                <iframe
+                                    src={activeDemo?.iframeUrl}
                                     style={{ width: "100%", height: "100%", border: "none", position: "relative", zIndex: 2 }}
                                     title={activeDemo?.title}
-                                /> */}
+                                    sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+                                />
                             </div>
                         </div>
                     </div>

@@ -18,19 +18,37 @@ export default function AboutPage() {
 
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "48px", alignItems: "start" }}>
                         {/* Bio */}
-                        <div style={{ animation: "fadeInUp 0.6s ease forwards" }}>
-                            <p style={{ fontSize: "1.1rem", marginBottom: "24px", color: "var(--text-primary)" }}>
+                        <div style={{
+                            animation: "fadeInUp 0.6s ease forwards",
+                            padding: "32px",
+                            borderRadius: "20px",
+                            background: "rgba(3, 0, 20, 0.6)",
+                            backdropFilter: "blur(14px)",
+                            border: "1px solid rgba(255,255,255,0.06)",
+                        }}>
+                            <p style={{ fontSize: "1.1rem", marginBottom: "24px", color: "#f1f5f9", fontWeight: "500", lineHeight: "1.7" }}>
                                 Ingénieur Data & IA doublement certifié (Microsoft Fabric Data Engineer Associate & Power BI Data Analyst), je transforme la donnée brute en leviers de performance stratégiques.
                             </p>
-                            <p style={{ marginBottom: "20px" }}>
+                            <p style={{ marginBottom: "20px", color: "#cbd5e1", lineHeight: "1.75" }}>
                                 Fort de mon expérience combinée en Data Engineering et en Analyse de Données, je maîtrise l'intégralité du cycle de valorisation de la donnée. Je conçois et déploie des pipelines automatisés complexes (ETL) et modèle les données pour proposer des Dashboards (Power BI, Qlik Sense) à très fort impact décisionnel, tout en réduisant les coûts opérationnels grâce à l'automatisation.
                             </p>
-                            <p style={{ marginBottom: "32px" }}>
+                            <p style={{ marginBottom: "32px", color: "#cbd5e1", lineHeight: "1.75" }}>
                                 Passionné par l'Intelligence Artificielle hybride, je conçois également des architectures avancées intégrant le Machine Learning, les LLM (RAG, LangGraph) et le Cloud pour répondre aux enjeux d'innovation des entreprises et multiplier leur ROI.
                             </p>
 
-                            <div style={{ display: "flex", gap: "16px", marginTop: "40px" }}>
-                                <a href="/CV_Berthoni_Passo.pdf" download className="btn-primary">
+                            <div style={{ display: "flex", gap: "16px", marginTop: "40px", flexWrap: "wrap" }}>
+                                <a
+                                    href="/CV_Berthoni_Passo.pdf"
+                                    download
+                                    className="btn-primary"
+                                    onClick={() => {
+                                        fetch("http://localhost:8000/api/analytics/", {
+                                            method: "POST",
+                                            headers: { "Content-Type": "application/json" },
+                                            body: JSON.stringify({ event_type: "cv_download" })
+                                        }).catch(console.warn);
+                                    }}
+                                >
                                     📥 Télécharger CV (PDF)
                                 </a>
                                 <a href="#competences" className="btn-secondary">

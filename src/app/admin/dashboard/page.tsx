@@ -62,7 +62,11 @@ export default function AdminDashboard() {
                         <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem", marginBottom: "24px", lineHeight: "1.5" }}>
                             Alimentez le Chatbot (Système RAG) avec de nouveaux documents, compétences ou textes.
                         </p>
-                        <button className="btn-secondary" style={{ width: "100%", padding: "12px", fontSize: "0.9rem" }}>
+                        <button
+                            className="btn-secondary"
+                            style={{ width: "100%", padding: "12px", fontSize: "0.9rem" }}
+                            onClick={() => alert("Pour des raisons de coûts API AWS Bedrock, l'entraînement s'effectue directement via le script sécurisé backend/data/seed_rag.py exécuté par l'administrateur système.")}
+                        >
                             Entraîner le Modèle
                         </button>
                     </div>
@@ -72,11 +76,13 @@ export default function AdminDashboard() {
                         <div style={{ fontSize: "2rem", marginBottom: "16px" }}>📈</div>
                         <h2 style={{ fontSize: "1.2rem", marginBottom: "12px" }}>Interactions & Stats</h2>
                         <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem", marginBottom: "24px", lineHeight: "1.5" }}>
-                            Visualisez les visites, les téléchargements de CV et les commentaires approuvés.
+                            Visualisez les visites, les téléchargements de CV et la popularité des projets.
                         </p>
-                        <button className="btn-secondary" style={{ width: "100%", padding: "12px", fontSize: "0.9rem" }}>
-                            Afficher les KPI
-                        </button>
+                        <Link href="/admin/analytics" style={{ textDecoration: "none" }}>
+                            <button className="btn-secondary" style={{ width: "100%", padding: "12px", fontSize: "0.9rem" }}>
+                                Afficher les KPI
+                            </button>
+                        </Link>
                     </div>
                 </div>
             </main>

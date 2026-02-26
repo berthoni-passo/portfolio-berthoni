@@ -26,12 +26,10 @@ def seed_rag():
     print("2. Sauvegarde dans Oracle 23ai...")
     db = SessionLocal()
     try:
-        # Check if CV is already loaded
-        existing = db.query(RagPortfolio).filter(RagPortfolio.source == "cv_complet").first()
-        if existing:
-            print("Le CV est déjà en base. Suppression de l'ancienne version...")
-            db.delete(existing)
-            db.commit()
+        # Nettoyer toute l'ancienne base pour être sûr de retirer "Thiais"
+        print("Nettoyage de l'ancienne base RAG...")
+        db.query(RagPortfolio).delete()
+        db.commit()
 
         db_item = RagPortfolio(source="cv_complet", content=content)
         db.add(db_item)

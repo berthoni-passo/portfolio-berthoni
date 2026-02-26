@@ -17,6 +17,9 @@ export default function Chatbot() {
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
+    // État pour la bulle d'accueil temporaire
+    const [showGreeting, setShowGreeting] = useState(false);
+
     // Auto-scroll to bottom of chat
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -25,6 +28,29 @@ export default function Chatbot() {
     useEffect(() => {
         scrollToBottom();
     }, [messages, isOpen]);
+
+    // Timer pour afficher la bulle de bienvenue
+    useEffect(() => {
+        // Apparaît après 2.5 secondes
+        const showTimer = setTimeout(() => {
+            if (!isOpen) setShowGreeting(true);
+        }, 2500);
+
+        // Disparaît 5 secondes après son apparition
+        const hideTimer = setTimeout(() => {
+            setShowGreeting(false);
+        }, 7500);
+
+        return () => {
+            clearTimeout(showTimer);
+            clearTimeout(hideTimer);
+        };
+    }, [isOpen]);
+
+    // Cache la bulle si l'utilisateur ouvre le chat
+    useEffect(() => {
+        if (isOpen) setShowGreeting(false);
+    }, [isOpen]);
 
     const handleSend = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -40,13 +66,35 @@ export default function Chatbot() {
                 method: "POST"
             });
 
-            if (res.ok) {
-                const data = await res.json();
-                const botMsg: Message = { id: (Date.now() + 1).toString(), role: "bot", content: data.answer };
-                setMessages(prev => [...prev, botMsg]);
-            } else {
+            if (!res.ok || !res.body) {
                 throw new Error("Erreur serveur RAG");
             }
+
+            setIsLoading(false); // On arrête le loader dès que le stream commence
+
+            // 1. On crée le message vide pour lancer l'affichage
+            const botMsgId = (Date.now() + 1).toString();
+            setMessages(prev => [...prev, { id: botMsgId, role: "bot", content: "" }]);
+
+            // 2. On lit le flux continu
+            const reader = res.body.getReader();
+            const decoder = new TextDecoder("utf-8");
+            let done = false;
+            let currentText = "";
+
+            while (!done) {
+                const { value, done: readerDone } = await reader.read();
+                done = readerDone;
+                if (value) {
+                    const chunk = decoder.decode(value, { stream: !done });
+                    currentText += chunk;
+                    // Mise à jour frame par frame (React batchera les états)
+                    setMessages(prev => prev.map(msg =>
+                        msg.id === botMsgId ? { ...msg, content: currentText } : msg
+                    ));
+                }
+            }
+
         } catch (error) {
             console.error(error);
             const errorMsg: Message = { id: (Date.now() + 1).toString(), role: "bot", content: "Oups, une erreur réseau s'est produite lors de la communication avec l'IA. Veuillez réessayer." };
@@ -94,7 +142,7 @@ export default function Chatbot() {
                         </div>
 
                         {/* Messages Area */}
-                        <div style={{ flex: 1, padding: "16px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "16px", background: "rgba(0,0,0,0.2)" }}>
+                        <div style={{ flex: 1, padding: "16px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "16px", background: "rgba(3, 0, 20, 0.7)" }}>
                             {messages.map((msg) => (
                                 <motion.div
                                     initial={{ opacity: 0, y: 10 }}
@@ -105,10 +153,12 @@ export default function Chatbot() {
                                         maxWidth: "85%",
                                         padding: "12px 16px",
                                         borderRadius: "16px",
-                                        background: msg.role === "user" ? "var(--accent-cyan)" : "rgba(255,255,255,0.05)",
-                                        color: msg.role === "user" ? "#000" : "var(--text-primary)",
+                                        background: msg.role === "user" ? "var(--accent-cyan)" : "rgba(30, 40, 70, 0.95)",
+                                        color: msg.role === "user" ? "#000814" : "#e2e8f0",
                                         fontSize: "0.9rem",
-                                        lineHeight: "1.4",
+                                        lineHeight: "1.5",
+                                        fontWeight: msg.role === "user" ? "600" : "400",
+                                        border: msg.role === "bot" ? "1px solid rgba(56,189,248,0.15)" : "none",
                                         borderBottomRightRadius: msg.role === "user" ? "4px" : "16px",
                                         borderBottomLeftRadius: msg.role === "bot" ? "4px" : "16px"
                                     }}
@@ -166,30 +216,76 @@ export default function Chatbot() {
                 )}
             </AnimatePresence>
 
-            {/* Floating Toggle Button */}
+            {/* Floating Toggle Button & Greeting Bubble */}
             {!isOpen && (
-                <motion.button
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setIsOpen(true)}
-                    style={{
-                        width: "60px",
-                        height: "60px",
-                        borderRadius: "50%",
-                        background: "linear-gradient(135deg, var(--accent-cyan), var(--accent-purple))",
-                        border: "none",
-                        boxShadow: "0 4px 20px rgba(0, 240, 255, 0.4)",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontSize: "24px"
-                    }}
-                >
-                    🤖
-                </motion.button>
+                <div style={{ position: "relative" }}>
+                    {/* Greeting Bubble */}
+                    <AnimatePresence>
+                        {showGreeting && (
+                            <motion.div
+                                initial={{ opacity: 0, x: 20, scale: 0.9 }}
+                                animate={{ opacity: 1, x: 0, scale: 1 }}
+                                exit={{ opacity: 0, x: 20, scale: 0.9 }}
+                                transition={{ type: "spring", stiffness: 200, damping: 20 }}
+                                style={{
+                                    position: "absolute",
+                                    right: "80px",
+                                    bottom: "10px",
+                                    width: "220px",
+                                    background: "rgba(30, 40, 70, 0.95)",
+                                    border: "1px solid rgba(56,189,248,0.3)",
+                                    borderRadius: "16px",
+                                    borderBottomRightRadius: "4px",
+                                    padding: "12px 16px",
+                                    color: "white",
+                                    fontSize: "0.85rem",
+                                    lineHeight: "1.4",
+                                    boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
+                                    cursor: "pointer",
+                                    zIndex: 10000,
+                                }}
+                                onClick={() => setIsOpen(true)}
+                            >
+                                👋 Salut ! Je suis l'IA de Berthoni. As-tu des questions sur son profil ou ses projets Data/IA ?
+                                {/* Petite flèche pointant vers l'avatar */}
+                                <div style={{
+                                    position: "absolute",
+                                    right: "-8px",
+                                    bottom: "10px",
+                                    width: "0",
+                                    height: "0",
+                                    borderTop: "8px solid transparent",
+                                    borderBottom: "8px solid transparent",
+                                    borderLeft: "8px solid rgba(30, 40, 70, 0.95)",
+                                }} />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* Avatar Button */}
+                    <motion.button
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setIsOpen(true)}
+                        style={{
+                            width: "60px",
+                            height: "60px",
+                            borderRadius: "50%",
+                            background: "url('/img/berthoni_thinking.png.jpeg') center/cover",
+                            backgroundColor: "var(--bg-secondary)", // Fallback
+                            border: "2px solid var(--accent-cyan)",
+                            boxShadow: "0 4px 20px rgba(0, 240, 255, 0.4)",
+                            cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            overflow: "hidden"
+                        }}
+                    >
+                    </motion.button>
+                </div>
             )}
 
             {/* CSS pour l'animation de frappe (typing indicator) */}
