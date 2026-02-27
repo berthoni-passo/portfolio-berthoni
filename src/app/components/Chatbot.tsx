@@ -76,7 +76,7 @@ export default function Chatbot() {
         setIsLoading(true);
 
         try {
-            const res = await fetch(`http://localhost:8000/api/rag/chat?question=${encodeURIComponent(userMsg.content)}`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/rag/chat?question=${encodeURIComponent(userMsg.content)}`, {
                 method: "POST"
             });
 
