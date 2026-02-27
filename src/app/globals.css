@@ -373,3 +373,64 @@ a {
 .chat-toggle:hover {
   transform: scale(1.1);
 }
+
+/* ─── Mobile Responsive ─── */
+@media (max-width: 768px) {
+
+  /* Hero padding réduit */
+  section {
+    padding-top: 80px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  /* Cards : padding réduit sur petit écran */
+  .glass-card {
+    padding: 20px !important;
+  }
+
+  /* Stat-card : texte plus petit */
+  .stat-number {
+    font-size: 1.8rem;
+  }
+
+  /* Chatbot : occuper plus de largeur sur mobile */
+  .chat-bubble {
+    bottom: 16px;
+    right: 16px;
+  }
+
+  /* Overflow horizontal global */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Boutons : pleine largeur sur mobile */
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Sections maxWidth */
+  .section {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: clamp(1.8rem, 8vw, 2.5rem);
+  }
+
+  h2 {
+    font-size: clamp(1.4rem, 6vw, 2rem);
+  }
+
+  /* Glass-card encore plus compact sur très petit écran */
+  .glass-card {
+    padding: 16px !important;
+    border-radius: var(--radius-md) !important;
+  }
+}

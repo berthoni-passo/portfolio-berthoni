@@ -77,10 +77,11 @@ export default function AboutPage() {
 
                         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px" }}>
                             {[
-                                { title: "Data & DB", items: ["Oracle 23ai", "PostgreSQL", "Data Engineering", "ETL Pipelines"] },
-                                { title: "Machine Learning", items: ["Python (Scikit-learn, PyTorch)", "LSTM & Time Series", "RAG & LLM Agents", "LangGraph"] },
-                                { title: "Cloud & Dev", items: ["AWS (Bedrock, S3, EC2, Amplify)", "Next.js & React", "TypeScript", "Docker"] },
-                                { title: "IoT", items: ["ONVIF Protocol", "Microcontrôleurs", "Smart Home Automation", "Edge Computing"] },
+                                { title: "Data & DB", items: ["Base de données Oracle", "PostgreSQL / SQL", "Microsoft Fabric", "Data Engineering", "ETL / ELT Pipelines", "Data Warehousing", "dbt (Data Build Tool)"] },
+                                { title: "Machine Learning & IA", items: ["Python (Scikit-learn, PyTorch, TensorFlow)", "LLM & RAG (LangChain, LangGraph)", "Computer Vision", "NLP & Text Analytics", "LSTM & Time Series", "MLOps & Model Deployment", "Prompt Engineering"] },
+                                { title: "Analytics & Visualisation", items: ["Power BI (certifié)", "Qlik Sense", "Data Storytelling", "KPI & Tableaux de bord", "Analyse prédictive", "Statistiques avancées"] },
+                                { title: "Cloud & DevOps", items: ["AWS (EC2, S3, Bedrock, Rekognition)", "Azure (Microsoft Fabric)", "Docker & Conteneurisation", "CI/CD Pipelines", "Next.js & TypeScript", "API REST & FastAPI"] },
+                                { title: "IoT & Edge", items: ["LangGraph Agents", "ONVIF Protocol", "Microcontrôleurs", "Smart Home Automation", "Edge Computing"] },
                             ].map((skillGroup) => (
                                 <div key={skillGroup.title} className="glass-card" style={{ padding: "32px" }}>
                                     <h3 style={{ marginBottom: "20px", color: "var(--accent-blue)" }}>{skillGroup.title}</h3>

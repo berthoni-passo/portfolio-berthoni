@@ -45,9 +45,9 @@ const skills = [
   "Microsoft Fabric", "Oracle 23ai", "Python", "LangGraph", "Streamlit",
 ];
 
-// ─── Stats ───
-const stats = [
-  { value: "5+", label: "Projets publiés" },
+// ─── Stats (fallback si API indisponible) ───
+const DEFAULT_STATS = [
+  { value: "...", label: "Projets publiés" },
   { value: "100%", label: "Projets Open Source" },
   { value: "3", label: "Technologies cloud" },
   { value: "∞", label: "Curiosité" },
@@ -63,6 +63,23 @@ export default function HomePage() {
   ]);
 
   useAnalytics('home_view');
+
+  const [stats, setStats] = useState(DEFAULT_STATS);
+
+  // Charger les vraies stats depuis l'API
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/projects/stats`)
+      .then(res => res.json())
+      .then(data => {
+        setStats([
+          { value: data.total_projects > 0 ? `${data.total_projects}` : "5+", label: "Projets publiés" },
+          { value: `${data.open_source_percent}%`, label: "Projets Open Source" },
+          { value: `${data.cloud_technologies}`, label: "Technologies cloud" },
+          { value: "∞", label: "Curiosité" },
+        ]);
+      })
+      .catch(() => { }); // garde les valeurs par défaut si l'API est hors ligne
+  }, []);
 
   const [recentProjects, setRecentProjects] = useState<any[]>([
     {

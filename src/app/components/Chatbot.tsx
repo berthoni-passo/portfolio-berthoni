@@ -29,21 +29,24 @@ export default function Chatbot() {
         scrollToBottom();
     }, [messages, isOpen]);
 
-    // Timer pour afficher la bulle de bienvenue
+    // Bulle de bienvenue : 1 fois après 5s, puis 1 fois après 3 minutes — jamais plus
     useEffect(() => {
-        // Apparaît après 2.5 secondes
-        const showTimer = setTimeout(() => {
-            if (!isOpen) setShowGreeting(true);
-        }, 2500);
-
-        // Disparaît 5 secondes après son apparition
-        const hideTimer = setTimeout(() => {
+        if (isOpen) {
             setShowGreeting(false);
-        }, 7500);
+            return;
+        }
+
+        // 1ère apparition : 5 secondes après le chargement
+        const t1Show = setTimeout(() => { if (!isOpen) setShowGreeting(true); }, 5000);
+        const t1Hide = setTimeout(() => setShowGreeting(false), 10000);
+
+        // 2ème apparition : 3 minutes (180s) après le chargement
+        const t2Show = setTimeout(() => { if (!isOpen) setShowGreeting(true); }, 180000);
+        const t2Hide = setTimeout(() => setShowGreeting(false), 185000);
 
         return () => {
-            clearTimeout(showTimer);
-            clearTimeout(hideTimer);
+            clearTimeout(t1Show); clearTimeout(t1Hide);
+            clearTimeout(t2Show); clearTimeout(t2Hide);
         };
     }, [isOpen]);
 
@@ -55,6 +58,17 @@ export default function Chatbot() {
     const handleSend = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!input.trim() || isLoading) return;
+
+        // Bloquer les messages trop courts (charabia, frappes accidentelles)
+        if (input.trim().length < 3) {
+            setMessages(prev => [...prev, {
+                id: Date.now().toString(),
+                role: "bot",
+                content: "😊 Posez-moi une vraie question sur Berthoni !"
+            }]);
+            setInput("");
+            return;
+        }
 
         const userMsg: Message = { id: Date.now().toString(), role: "user", content: input };
         setMessages(prev => [...prev, userMsg]);

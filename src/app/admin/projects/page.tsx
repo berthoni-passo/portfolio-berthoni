@@ -217,7 +217,7 @@ export default function AdminProjects() {
 
                             <div>
                                 <label style={{ display: "block", marginBottom: "8px", fontSize: "0.9rem", color: "var(--text-secondary)" }}>URL Cloud / Démo Interactive (Optionnel)</label>
-                                <input type="url" value={demoUrl} onChange={e => setDemoUrl(e.target.value)} style={inputStyle} placeholder="https://..." />
+                                <input type="text" value={demoUrl} onChange={e => setDemoUrl(e.target.value)} style={inputStyle} placeholder="https://... ou /lab" />
                                 <p style={{ fontSize: "0.8rem", color: "var(--accent-blue)", marginTop: "6px" }}>
                                     💡 <i>Astuce : Ajoutez le tag "ML Lab" ou "Streamlit" pour que cette URL s'affiche comme application interactive intégrée (iFrame) dans l'onglet Lab.</i>
                                 </p>

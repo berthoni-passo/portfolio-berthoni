@@ -64,6 +64,14 @@ export default function ProjectsPage() {
                     tags: "Power BI, Oracle, AWS, SQL",
                     powerbi_url: "https://app.powerbi.com/view?r=eyJrIjoiOWU4YmIyMzQtOTQ1ZS00YzNhLWJhNjItMzZhZGJhNDZjYTE2IiwidCI6IjQyNGZmNTM1LTc2ODktNDRiYi05NTcyLTY0MjgxYzI3OWFkMyJ9",
                     thumbnail_s3: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800"
+                },
+                {
+                    id: 4,
+                    title: "Détection d'émotions en temps réel",
+                    description: "Activez votre caméra et regardez l'IA déchiffrer vos émotions instantanément. Ce modèle de Computer Vision analyse votre visage pour identifier 8 émotions (joie, tristesse, colère, surprise...) avec un score de confiance. Une démo interactive qui illustre toute la puissance du Deep Learning appliqué à la vision par ordinateur.",
+                    tags: "Computer Vision, Deep Learning, Python, FastAPI",
+                    demo_url: "/lab",
+                    thumbnail_s3: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=800"
                 }
             ];
 

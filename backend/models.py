@@ -17,13 +17,13 @@ class Project(Base):
     __tablename__ = "projects"
 
     id = Column(Integer, Identity(), primary_key=True)
-    title = Column(String(100), nullable=False)
+    title = Column(String(200), nullable=False)          # match schema max_length=200
     description = Column(Text, nullable=False)
-    tags = Column(String(200)) # comma separated tags
-    github_url = Column(String(255))
-    demo_url = Column(String(255))
+    tags = Column(String(500))                           # match schema max_length=500
+    github_url = Column(String(500))
+    demo_url = Column(String(500))
     powerbi_url = Column(String(500))
-    thumbnail_s3 = Column(String(255))
+    thumbnail_s3 = Column(String(1000))                  # match schema max_length=1000
     published_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     images = relationship("ProjectImage", back_populates="project")
@@ -44,7 +44,7 @@ class Comment(Base):
 
     id = Column(Integer, Identity(), primary_key=True)
     project_id = Column(Integer, ForeignKey("projects.id"))
-    author_name = Column(String(50), nullable=False)
+    author_name = Column(String(100), nullable=False)    # match schema max_length=100
     content = Column(Text, nullable=False)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
@@ -67,8 +67,8 @@ class Analytics(Base):
     __tablename__ = "analytics"
 
     id = Column(Integer, Identity(), primary_key=True)
-    event_type = Column(String(50), nullable=False) # 'page_view', 'cv_download', etc.
-    target_id = Column(Integer) # e.g. project_id or photo_id if applicable
+    event_type = Column(String(100), nullable=False)     # match schema max_length=100
+    target_id = Column(Integer)
     ip_hash = Column(String(64))
     user_agent = Column(String(255))
     created_at = Column(DateTime, default=datetime.datetime.utcnow)

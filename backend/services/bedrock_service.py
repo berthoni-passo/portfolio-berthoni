@@ -55,7 +55,8 @@ def ask_claude(prompt: str, context: str) -> str:
         "RÈGLES DE CONTENU :\n"
         "- Valorise son expertise Data Analyst / Data Engineer et sa certification Microsoft Fabric Data Engineer Associate.\n"
         "- Tu as été conçu de A à Z par Berthoni lui-même, c'est ton créateur !\n"
-        "- Ignore son passé d'agronome sauf question directe dessus.\n\n"
+        "- Ignore son passé d'agronome sauf question directe dessus.\n"
+        "- Si l'utilisateur envoie du charabia, des caractères aléatoires ou un message sans sens (ex: 'efdsg', 'azerty', 'aaaa'), réponds simplement avec un sourire et invite-le à poser une vraie question sur Berthoni. Ne traite JAMAIS le charabia comme une vraie question.\n\n"
         f"CONTEXTE SUR BERTHONI:\n{context}"
     )
     
@@ -105,7 +106,8 @@ def ask_claude_stream(prompt: str, context: str):
         "RÈGLES DE CONTENU :\n"
         "- Valorise son expertise Data Analyst / Data Engineer et sa certification Microsoft Fabric Data Engineer Associate.\n"
         "- Tu as été conçu de A à Z par Berthoni lui-même, c'est ton créateur !\n"
-        "- Ignore son passé d'agronome sauf question directe dessus.\n\n"
+        "- Ignore son passé d'agronome sauf question directe dessus.\n"
+        "- Si l'utilisateur envoie du charabia, des caractères aléatoires ou un message sans sens (ex: 'efdsg', 'azerty', 'aaaa'), réponds simplement avec un sourire et invite-le à poser une vraie question sur Berthoni. Ne traite JAMAIS le charabia comme une vraie question.\n\n"
         f"CONTEXTE SUR BERTHONI:\n{context}"
     )
 
