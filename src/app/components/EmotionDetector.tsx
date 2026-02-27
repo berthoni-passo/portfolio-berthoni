@@ -83,7 +83,7 @@ export default function EmotionDetector() {
         setPermission("requesting");
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
-                video: { width: 640, height: 480, facingMode: "user" }
+                video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" }
             });
             streamRef.current = stream;
             setCameraActive(true);
@@ -258,7 +258,7 @@ export default function EmotionDetector() {
                 </div>
             </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "24px", alignItems: "start" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px", alignItems: "start" }}>
 
                 {/* Left: Camera panel */}
                 <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
@@ -268,7 +268,7 @@ export default function EmotionDetector() {
                         borderRadius: "16px",
                         overflow: "hidden",
                         border: cameraActive ? "1px solid rgba(56, 189, 248, 0.4)" : "1px solid var(--border)",
-                        aspectRatio: "4/3",
+                        minHeight: "300px",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center"
@@ -295,7 +295,8 @@ export default function EmotionDetector() {
                             playsInline
                             muted
                             style={{
-                                width: "100%", height: "100%", objectFit: "cover",
+                                width: "100%", height: "auto", maxHeight: "60vh",
+                                objectFit: "cover",
                                 transform: "scaleX(-1)",
                                 display: cameraActive ? "block" : "none"
                             }}
@@ -333,13 +334,13 @@ export default function EmotionDetector() {
                     <canvas ref={canvasRef} style={{ display: "none" }} />
 
                     {/* Controls */}
-                    <div style={{ display: "flex", gap: "12px" }}>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
                         {!cameraActive ? (
                             <button
                                 className="btn-primary"
                                 onClick={startCamera}
                                 disabled={permission === "requesting"}
-                                style={{ flex: 1, justifyContent: "center" }}
+                                style={{ flex: 1, minWidth: "100%", justifyContent: "center" }}
                             >
                                 {permission === "requesting" ? "⏳ Connexion..." : "📷 Activer la caméra"}
                             </button>
@@ -349,7 +350,7 @@ export default function EmotionDetector() {
                                     className="btn-primary"
                                     onClick={analyzeEmotion}
                                     disabled={loading}
-                                    style={{ flex: 1, justifyContent: "center" }}
+                                    style={{ flex: 1, minWidth: "150px", justifyContent: "center" }}
                                 >
                                     {loading ? "🔍 Analyse en cours..." : "📸 Analyser"}
                                 </button>
