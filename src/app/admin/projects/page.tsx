@@ -27,6 +27,9 @@ export default function AdminProjects() {
     const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    // Edit state
+    const [editingProjectId, setEditingProjectId] = useState<number | null>(null);
+
     useEffect(() => {
         const token = localStorage.getItem("admin_token");
         if (!token) {
@@ -98,8 +101,14 @@ export default function AdminProjects() {
         };
 
         try {
-            const res = await fetch("http://localhost:8000/api/projects/", {
-                method: "POST",
+            const endpoint = editingProjectId
+                ? `http://localhost:8000/api/projects/${editingProjectId}`
+                : "http://localhost:8000/api/projects/";
+
+            const method = editingProjectId ? "PUT" : "POST";
+
+            const res = await fetch(endpoint, {
+                method: method,
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${localStorage.getItem("admin_token")}`
@@ -109,13 +118,11 @@ export default function AdminProjects() {
 
             if (res.ok) {
                 // Reset form
-                setTitle(""); setDescription(""); setTags("");
-                setGithubUrl(""); setDemoUrl(""); setPowerbiUrl("");
-                setThumbnailS3(""); setThumbnailFile(null);
-                alert("✨ Projet publié avec succès !");
+                resetForm();
+                alert(editingProjectId ? "✨ Projet mis à jour avec succès !" : "✨ Projet publié avec succès !");
                 fetchProjects(); // Refresh the list
             } else {
-                alert("Erreur lors de la publication du projet.");
+                alert("Erreur lors de l'enregistrement du projet.");
             }
         } catch (err) {
             console.error(err);
@@ -123,6 +130,26 @@ export default function AdminProjects() {
         } finally {
             setIsSubmitting(false);
         }
+    };
+
+    const resetForm = () => {
+        setTitle(""); setDescription(""); setTags("");
+        setGithubUrl(""); setDemoUrl(""); setPowerbiUrl("");
+        setThumbnailS3(""); setThumbnailFile(null);
+        setEditingProjectId(null);
+    };
+
+    const handleEditClick = (project: Project & { github_url?: string, demo_url?: string, powerbi_url?: string, thumbnail_s3?: string }) => {
+        setEditingProjectId(project.id);
+        setTitle(project.title);
+        setDescription(project.description);
+        setTags(project.tags || "");
+        setGithubUrl(project.github_url || "");
+        setDemoUrl(project.demo_url || "");
+        setPowerbiUrl(project.powerbi_url || "");
+        setThumbnailS3(project.thumbnail_s3 || "");
+        setThumbnailFile(null);
+        window.scrollTo({ top: 0, behavior: 'smooth' }); // Remonter en haut de page pour voir le formulaire
     };
 
     const handleDeleteProject = async (id: number) => {
@@ -157,9 +184,18 @@ export default function AdminProjects() {
 
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: "40px", alignItems: "start" }}>
 
-                    {/* Formulaire de Création */}
-                    <div className="glass-card fade-in-up" style={{ padding: "32px", position: "sticky", top: "120px", borderTop: "3px solid var(--accent-cyan)" }}>
-                        <h2 style={{ fontSize: "1.5rem", marginBottom: "24px" }}>Nouveau Projet</h2>
+                    {/* Formulaire de Création / Édition */}
+                    <div className="glass-card fade-in-up" style={{ padding: "32px", position: "sticky", top: "120px", borderTop: editingProjectId ? "3px solid #f59e0b" : "3px solid var(--accent-cyan)" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
+                            <h2 style={{ fontSize: "1.5rem", margin: 0 }}>
+                                {editingProjectId ? `Édition du Projet #${editingProjectId}` : "Nouveau Projet"}
+                            </h2>
+                            {editingProjectId && (
+                                <button onClick={resetForm} className="btn-secondary" style={{ padding: "6px 12px", fontSize: "0.8rem" }}>
+                                    ❌ Annuler l'édition
+                                </button>
+                            )}
+                        </div>
 
                         <form onSubmit={handleCreateProject} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
                             <div>
@@ -180,13 +216,11 @@ export default function AdminProjects() {
                             <hr style={{ borderColor: "rgba(255,255,255,0.1)", margin: "8px 0" }} />
 
                             <div>
-                                <label style={{ display: "block", marginBottom: "8px", fontSize: "0.9rem", color: "var(--text-secondary)" }}>URL GitHub (Optionnel)</label>
-                                <input type="url" value={githubUrl} onChange={e => setGithubUrl(e.target.value)} style={inputStyle} placeholder="https://github.com/..." />
-                            </div>
-
-                            <div>
-                                <label style={{ display: "block", marginBottom: "8px", fontSize: "0.9rem", color: "var(--text-secondary)" }}>URL Iframe Power BI (Optionnel)</label>
-                                <input type="text" value={powerbiUrl} onChange={e => setPowerbiUrl(e.target.value)} style={inputStyle} placeholder="https://app.powerbi.com/view?r=..." />
+                                <label style={{ display: "block", marginBottom: "8px", fontSize: "0.9rem", color: "var(--text-secondary)" }}>URL Cloud / Démo Interactive (Optionnel)</label>
+                                <input type="url" value={demoUrl} onChange={e => setDemoUrl(e.target.value)} style={inputStyle} placeholder="https://..." />
+                                <p style={{ fontSize: "0.8rem", color: "var(--accent-blue)", marginTop: "6px" }}>
+                                    💡 <i>Astuce : Ajoutez le tag "ML Lab" ou "Streamlit" pour que cette URL s'affiche comme application interactive intégrée (iFrame) dans l'onglet Lab.</i>
+                                </p>
                             </div>
 
                             <div>
@@ -202,7 +236,7 @@ export default function AdminProjects() {
                             </div>
 
                             <button type="submit" className="btn-primary" disabled={isSubmitting} style={{ marginTop: "16px", opacity: isSubmitting ? 0.7 : 1 }}>
-                                {isSubmitting ? "Publication en cours..." : "Publier le projet"}
+                                {isSubmitting ? "Enregistrement en cours..." : (editingProjectId ? "💾 Mettre à jour le projet" : "Publier le projet")}
                             </button>
                         </form>
                     </div>
@@ -233,6 +267,9 @@ export default function AdminProjects() {
                                             </div>
                                         </div>
                                         <div style={{ display: "flex", gap: "12px" }}>
+                                            <button onClick={() => handleEditClick(proj as any)} className="btn-secondary" style={{ padding: "8px 16px", fontSize: "0.85rem", borderColor: "#f59e0b", color: "#f59e0b" }}>
+                                                Modifier
+                                            </button>
                                             <a href={`/projets/${proj.id}`} target="_blank" rel="noreferrer" className="btn-secondary" style={{ padding: "8px 16px", fontSize: "0.85rem" }}>
                                                 Voir
                                             </a>

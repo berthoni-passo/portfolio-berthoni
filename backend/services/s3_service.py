@@ -4,14 +4,13 @@ import uuid
 import shutil
 from fastapi import UploadFile, HTTPException
 
-AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-AWS_REGION = os.getenv("AWS_REGION", "eu-west-3")
-S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME", "portfolio-berthoni-assets")
-
-# Initialisation différée pour ne pas crasher l'app au démarrage
-# si les clés ne sont pas encore définies dans le .env
 def get_s3_client():
+    # Lecture dynamique pour prendre en compte les changements du .env 
+    # sans avoir à redémarrer le serveur uvicorn
+    AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+    AWS_REGION = os.getenv("AWS_REGION", "eu-west-3")
+    
     if not AWS_ACCESS_KEY_ID or not AWS_SECRET_ACCESS_KEY:
         print("ATTENTION: Identifiants AWS S3 manquants dans le .env")
         return None
@@ -30,6 +29,8 @@ def upload_image_to_s3(file: UploadFile) -> str:
     est sauvegardée localement dans le dossier public/uploads du frontend Next.js en fallback.
     """
     s3_client = get_s3_client()
+    S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME", "portfolio-berthoni-assets")
+    AWS_REGION = os.getenv("AWS_REGION", "eu-west-3")
     
     file_extension = file.filename.split('.')[-1]
     unique_filename = f"projects/{uuid.uuid4()}.{file_extension}"

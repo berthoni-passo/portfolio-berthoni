@@ -57,6 +57,15 @@ class ProjectBase(BaseModel):
 class ProjectCreate(ProjectBase):
     pass
 
+class ProjectUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    tags: Optional[str] = None
+    github_url: Optional[str] = None
+    demo_url: Optional[str] = None
+    powerbi_url: Optional[str] = None
+    thumbnail_s3: Optional[str] = None
+
 class Project(ProjectBase):
     id: int
     published_at: datetime.datetime

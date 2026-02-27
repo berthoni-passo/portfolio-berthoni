@@ -51,6 +51,28 @@ def create_project(project: schemas.ProjectCreate, db: Session = Depends(get_db)
     db.refresh(db_project)
     return db_project
 
+@router.put("/{project_id}", response_model=schemas.Project)
+def update_project(
+    project_id: int, 
+    project_update: schemas.ProjectUpdate, 
+    db: Session = Depends(get_db), 
+    current_admin: models.User = Depends(get_current_admin_user)
+):
+    """
+    [Admin] Met à jour les informations d'un projet existant.
+    """
+    project = db.query(models.Project).filter(models.Project.id == project_id).first()
+    if not project:
+        raise HTTPException(status_code=404, detail="Projet non trouvé")
+    
+    update_data = project_update.model_dump(exclude_unset=True)
+    for key, value in update_data.items():
+        setattr(project, key, value)
+        
+    db.commit()
+    db.refresh(project)
+    return project
+
 @router.delete("/{project_id}", status_code=204)
 def delete_project(project_id: int, db: Session = Depends(get_db), current_admin: models.User = Depends(get_current_admin_user)):
     """

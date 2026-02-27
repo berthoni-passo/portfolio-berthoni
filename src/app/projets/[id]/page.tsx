@@ -211,11 +211,16 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
                 {/* Visualisation Interactive (PowerBI UI si existant) */}
                 {project.powerbi_url && (
                     <section style={{ animation: "fadeInUp 0.8s ease forwards" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "24px" }}>
-                            <span style={{ fontSize: "1.5rem" }}>📊</span>
-                            <h2 style={{ fontSize: "1.5rem" }}>Dashboard Analytique</h2>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "24px" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                                <span style={{ fontSize: "1.5rem" }}>📊</span>
+                                <h2 style={{ fontSize: "1.5rem", margin: 0 }}>Dashboard Analytique</h2>
+                            </div>
+                            <a href={project.powerbi_url} target="_blank" rel="noreferrer" className="btn-secondary" style={{ fontSize: "0.9rem", padding: "8px 16px" }}>
+                                ↗️ Ouvrir en plein écran
+                            </a>
                         </div>
-                        <div className="glass-card" style={{ padding: "8px", borderRadius: "16px", height: "600px", overflow: "hidden" }}>
+                        <div className="glass-card" style={{ padding: "8px", borderRadius: "16px", height: "800px", overflow: "hidden" }}>
                             <iframe
                                 title="Data Visualization"
                                 src={project.powerbi_url}
@@ -228,18 +233,28 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
                 )}
 
                 {/* Galerie du projet */}
-                {(project.thumbnail_s3 || project.images?.length > 0) && (
+                {(project.thumbnail_s3 || (project.images && project.images.length > 0)) && (
                     <section>
                         <h2 style={{ fontSize: "1.5rem", marginBottom: "24px" }}>Média du Projet</h2>
                         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "24px" }}>
                             {project.thumbnail_s3 && (
-                                <div className="glass-card" style={{ padding: "8px", borderRadius: "16px", height: "250px", overflow: "hidden" }}>
-                                    <div style={{ width: "100%", height: "100%", background: `url(${project.thumbnail_s3}) center/cover`, borderRadius: "12px" }} title="Miniature Principale" />
+                                <div className="glass-card" style={{ padding: "8px", borderRadius: "16px", height: "350px", overflow: "hidden" }}>
+                                    <img
+                                        src={project.thumbnail_s3.replace('public', '')}
+                                        alt="Miniature Principale"
+                                        style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "12px" }}
+                                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                                    />
                                 </div>
                             )}
                             {project.images?.map((img, i) => (
-                                <div key={i} className="glass-card" style={{ padding: "8px", borderRadius: "16px", height: "250px", overflow: "hidden" }}>
-                                    <div style={{ width: "100%", height: "100%", background: `url(${img.s3_url}) center/cover`, borderRadius: "12px" }} title={img.caption || ""} />
+                                <div key={i} className="glass-card" style={{ padding: "8px", borderRadius: "16px", height: "350px", overflow: "hidden" }}>
+                                    <img
+                                        src={img.s3_url.replace('public', '')}
+                                        alt={img.caption || `Image projet ${i}`}
+                                        title={img.caption || ""}
+                                        style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "12px" }}
+                                    />
                                 </div>
                             ))}
                         </div>

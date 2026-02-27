@@ -96,7 +96,7 @@ export default function ProjectCard({ project, itemVariants }: ProjectCardProps)
                         <div
                             style={{
                                 position: "absolute", inset: 0,
-                                background: `url(${project.thumbnail_s3}) center/cover`,
+                                background: `url(${project.thumbnail_s3.replace('public', '')}) center/cover`,
                                 transition: "transform 0.5s"
                             }}
                             className="thumbnail-bg"

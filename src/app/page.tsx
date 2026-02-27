@@ -462,8 +462,8 @@ export default function HomePage() {
           ))}
         </div>
 
-        <div style={{ textAlign: "center" }}>
-          <Link href="/projets" className="btn-secondary">
+        <div style={{ textAlign: "center", marginTop: "40px" }}>
+          <Link href="/projets" className="btn-secondary" style={{ position: "relative", zIndex: 10 }}>
             Voir tous les projets →
           </Link>
         </div>
