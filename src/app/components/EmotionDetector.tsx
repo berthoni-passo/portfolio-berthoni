@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 
 type Emotion = {
     type: string;
@@ -52,9 +52,6 @@ export default function EmotionDetector() {
                 video: { width: 640, height: 480, facingMode: "user" }
             });
             streamRef.current = stream;
-            if (videoRef.current) {
-                videoRef.current.srcObject = stream;
-            }
             setCameraActive(true);
             setPermission("idle");
         } catch {
@@ -62,6 +59,17 @@ export default function EmotionDetector() {
             setError("Permission caméra refusée. Autorisez l'accès dans votre navigateur.");
         }
     }, []);
+
+    // Assigner le stream APRES que la vidéo soit montée dans le DOM
+    useEffect(() => {
+        if (cameraActive && videoRef.current && streamRef.current) {
+            videoRef.current.srcObject = streamRef.current;
+            videoRef.current.play().catch(() => { });
+        }
+        if (!cameraActive && videoRef.current) {
+            videoRef.current.srcObject = null;
+        }
+    }, [cameraActive]);
 
     const stopCamera = useCallback(() => {
         if (streamRef.current) {
@@ -75,19 +83,28 @@ export default function EmotionDetector() {
 
     const analyzeEmotion = useCallback(async () => {
         if (!videoRef.current || !canvasRef.current) return;
+
+        const video = videoRef.current;
+
+        // Guard : la vidéo doit avoir des dimensions réelles avant de capturer
+        if (video.videoWidth === 0 || video.videoHeight === 0) {
+            setError("La caméra n'est pas encore prête. Patientez 1 seconde et réessayez.");
+            return;
+        }
+
         setLoading(true);
         setError(null);
         setResult(null);
 
         // Capture frame
         const canvas = canvasRef.current;
-        const video = videoRef.current;
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
+        // La vidéo est miroir (scaleX(-1)) → on capture sans miroir pour AWS
         ctx.drawImage(video, 0, 0);
-        const base64 = canvas.toDataURL("image/jpeg", 0.85);
+        const base64 = canvas.toDataURL("image/jpeg", 0.9);
 
         try {
             const res = await fetch(
@@ -124,7 +141,7 @@ export default function EmotionDetector() {
             {/* Header */}
             <div style={{ textAlign: "center" }}>
                 <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem" }}>
-                    Activez votre caméra et laissez l&apos;IA analyser vos émotions en temps réel via <strong style={{ color: "var(--accent-blue)" }}>AWS Rekognition</strong>.
+                    Activez votre caméra et laissez l&apos;IA analyser vos émotions en temps réel.
                 </p>
             </div>
 
@@ -143,33 +160,45 @@ export default function EmotionDetector() {
                         alignItems: "center",
                         justifyContent: "center"
                     }}>
-                        {!cameraActive ? (
-                            <div style={{ textAlign: "center", color: "var(--text-muted)" }}>
+                        {/* Placeholder quand cam inactive */}
+                        {!cameraActive && (
+                            <div style={{
+                                position: "absolute", inset: 0,
+                                display: "flex", flexDirection: "column",
+                                alignItems: "center", justifyContent: "center",
+                                color: "var(--text-muted)"
+                            }}>
                                 <div style={{ fontSize: "3rem", marginBottom: "12px" }}>📷</div>
                                 <p style={{ color: "var(--text-muted)", fontSize: "0.85rem" }}>
                                     {permission === "denied" ? "Accès refusé" : "Caméra inactive"}
                                 </p>
                             </div>
-                        ) : (
-                            <>
-                                <video
-                                    ref={videoRef}
-                                    autoPlay
-                                    playsInline
-                                    muted
-                                    style={{ width: "100%", height: "100%", objectFit: "cover", transform: "scaleX(-1)" }}
-                                />
-                                {/* Live indicator */}
-                                <div style={{
-                                    position: "absolute", top: "12px", left: "12px",
-                                    display: "flex", alignItems: "center", gap: "6px",
-                                    background: "rgba(0,0,0,0.6)", borderRadius: "100px",
-                                    padding: "4px 10px", fontSize: "0.75rem", fontWeight: 600
-                                }}>
-                                    <div className="glow-dot" style={{ width: "6px", height: "6px", background: "#ef4444", boxShadow: "0 0 8px #ef4444" }} />
-                                    LIVE
-                                </div>
-                            </>
+                        )}
+
+                        {/* Video — toujours dans le DOM, visible seulement quand active */}
+                        <video
+                            ref={videoRef}
+                            autoPlay
+                            playsInline
+                            muted
+                            style={{
+                                width: "100%", height: "100%", objectFit: "cover",
+                                transform: "scaleX(-1)",
+                                display: cameraActive ? "block" : "none"
+                            }}
+                        />
+
+                        {/* Live indicator */}
+                        {cameraActive && (
+                            <div style={{
+                                position: "absolute", top: "12px", left: "12px",
+                                display: "flex", alignItems: "center", gap: "6px",
+                                background: "rgba(0,0,0,0.6)", borderRadius: "100px",
+                                padding: "4px 10px", fontSize: "0.75rem", fontWeight: 600
+                            }}>
+                                <div className="glow-dot" style={{ width: "6px", height: "6px", background: "#ef4444", boxShadow: "0 0 8px #ef4444" }} />
+                                LIVE
+                            </div>
                         )}
                     </div>
 
@@ -364,7 +393,7 @@ export default function EmotionDetector() {
                 borderTop: "1px solid var(--border)"
             }}>
                 <p style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>
-                    🔒 Vos images ne sont jamais stockées · Traitement temps réel par <strong>Amazon Rekognition</strong> · 5000 analyses/mois gratuites
+                    🔒 Vos images ne sont jamais stockées · Traitement en temps réel
                 </p>
             </div>
         </div>

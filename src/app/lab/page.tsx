@@ -23,7 +23,7 @@ export default function LabPage() {
             id: "emotion",
             title: "Détection d'émotion",
             icon: "😊",
-            description: "Analyse en temps réel de vos émotions via webcam · Powered by AWS Rekognition",
+            description: "Analyse en temps réel de vos émotions via webcam",
             iframeUrl: null
         }
     ];
