@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 import models, database, auth
-from routers import projects, interactions, rag, analytics
+from routers import projects, interactions, rag, analytics, emotion
 import os
 
 # Création des tables dans Oracle — wrappé pour éviter un crash si Oracle démarre encore
@@ -20,6 +20,7 @@ app.include_router(projects.router)
 app.include_router(interactions.router)
 app.include_router(rag.router)
 app.include_router(analytics.router)
+app.include_router(emotion.router)
 
 # CORS setup
 app.add_middleware(
