@@ -44,7 +44,8 @@ app.include_router(emotion.router)
 ALLOWED_ORIGINS = [
     os.getenv("NEXT_PUBLIC_SITE_URL", "http://localhost:3000"),
     "http://localhost:3000",
-    "https://berthonipasso.space",  # ton domaine de prod
+    "https://berthonipassoportfolio.com",
+    "http://berthonipassoportfolio.com",
 ]
 app.add_middleware(
     CORSMiddleware,
