@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import ParticlesCanvas from "../components/ParticlesCanvas";
 import EmotionDetector from "../components/EmotionDetector";
+import { useAnalytics } from "../hooks/useAnalytics";
 
 type LabDemo = {
     id: string; // project.id
@@ -16,6 +17,9 @@ export default function LabPage() {
     const [activeTab, setActiveTab] = useState<string>("emotion"); // Onglet émotion actif par défaut
     const [demos, setDemos] = useState<LabDemo[]>([]);
     const [loading, setLoading] = useState(true);
+
+    // Track page view
+    useAnalytics("lab_view");
 
     // Démo native hardcodée — ne dépend pas de la DB
     const NATIVE_DEMOS: LabDemo[] = [
