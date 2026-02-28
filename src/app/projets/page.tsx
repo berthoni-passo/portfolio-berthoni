@@ -76,7 +76,7 @@ export default function ProjectsPage() {
             ];
 
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/projects/`);
+                const res = await fetch(`/api/projects/`);
                 if (res.ok) {
                     const data = await res.json();
                     setProjects(data.length > 0 ? data : DUMMY_PROJECTS);

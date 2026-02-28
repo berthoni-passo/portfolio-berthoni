@@ -68,7 +68,7 @@ export default function HomePage() {
 
   // Charger les vraies stats depuis l'API
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/projects/stats`)
+    fetch(`/api/projects/stats`)
       .then(res => res.json())
       .then(data => {
         setStats([
@@ -109,7 +109,7 @@ export default function HomePage() {
   ]);
 
   useEffect(() => {
-    fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/projects/`)
+    fetch(`/api/projects/`)
       .then(res => res.json())
       .then(data => {
         if (data && Array.isArray(data) && data.length > 0) {

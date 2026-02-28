@@ -42,7 +42,7 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
         setVisitorId(vId);
 
         // Fetch project data (avec mock si API non dispo)
-        fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/projects/${id}`)
+        fetch(`/api/projects/${id}`)
             .then(res => {
                 if (!res.ok) {
                     throw new Error("Projet non trouvé via API");
@@ -73,7 +73,7 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
             });
 
         // Fetch likes count
-        fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/interactions/likes/project/${id}`)
+        fetch(`/api/interactions/likes/project/${id}`)
             .then(res => res.json())
             .then(data => {
                 setLikes(data.count);
@@ -99,7 +99,7 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
         if (hasLiked) return;
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/interactions/likes?ip_hash=${visitorId}`, {
+            const res = await fetch(`/api/interactions/likes?ip_hash=${visitorId}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ target_type: "project", target_id: parseInt(id, 10) })
@@ -128,7 +128,7 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
 
         setIsSubmitting(true);
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/interactions/comments?project_id=${id}`, {
+            const res = await fetch(`/api/interactions/comments?project_id=${id}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ author_name: commentName, content: commentContent })

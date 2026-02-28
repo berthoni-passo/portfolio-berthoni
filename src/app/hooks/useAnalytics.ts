@@ -7,7 +7,7 @@ export function useAnalytics(eventType: string, targetId?: number) {
         const trackEvent = async () => {
             try {
                 // Afin de ne pas spamer en développement local, on peut ignorer ou faire tourner.
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/analytics/`, {
+                const res = await fetch(`/api/analytics/`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

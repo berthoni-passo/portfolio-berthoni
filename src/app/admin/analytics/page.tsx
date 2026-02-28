@@ -30,7 +30,7 @@ export default function AdminAnalytics() {
 
         const fetchStats = async () => {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/analytics/summary`, {
+                const res = await fetch(`/api/analytics/summary`, {
                     headers: {
                         "Authorization": `Bearer ${token}`
                     }

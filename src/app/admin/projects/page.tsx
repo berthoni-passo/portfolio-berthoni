@@ -41,7 +41,7 @@ export default function AdminProjects() {
 
     const fetchProjects = async () => {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/projects/`);
+            const res = await fetch(`/api/projects/`);
             if (res.ok) {
                 const data = await res.json();
                 setProjects(data);
@@ -65,7 +65,7 @@ export default function AdminProjects() {
             formData.append("file", thumbnailFile);
 
             try {
-                const uploadRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/projects/upload-thumbnail`, {
+                const uploadRes = await fetch(`/api/projects/upload-thumbnail`, {
                     method: "POST",
                     headers: {
                         "Authorization": `Bearer ${localStorage.getItem("admin_token")}`
@@ -102,8 +102,8 @@ export default function AdminProjects() {
 
         try {
             const endpoint = editingProjectId
-                ? `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/projects/${editingProjectId}`
-                : `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/projects/`;
+                ? `/api/projects/${editingProjectId}`
+                : `/api/projects/`;
 
             const method = editingProjectId ? "PUT" : "POST";
 
@@ -156,7 +156,7 @@ export default function AdminProjects() {
         if (!confirm("Êtes-vous sûr de vouloir supprimer ce projet ? Cette action est irréversible.")) return;
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/projects/${id}`, {
+            const res = await fetch(`/api/projects/${id}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem("admin_token")}`

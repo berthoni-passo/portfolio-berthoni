@@ -2,11 +2,11 @@ import os
 import re
 
 src_dir = r"C:\Users\Asus\Documents\projet\portfolio-berthoni\src"
-pattern_str = r'"http://localhost:8000(/api/[^"]*)"'
-replacement_str = r'`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}\1`'
+pattern_str = r'"\${process\.env\.NEXT_PUBLIC_API_URL\s*\|\|\s*"http://localhost:8000"}(/api/[^"]*)"'
+replacement_str = r'"\1"'
 
-pattern_backtick = r'`http://localhost:8000(/api/[^`]*)`'
-replacement_backtick = r'`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}\1`'
+pattern_backtick = r'`\${process\.env\.NEXT_PUBLIC_API_URL\s*\|\|\s*"http://localhost:8000"}(/api/[^`]*)`'
+replacement_backtick = r'`\1`'
 
 for root, _, files in os.walk(src_dir):
     for f in files:
@@ -15,8 +15,7 @@ for root, _, files in os.walk(src_dir):
             with open(path, 'r', encoding='utf-8') as file:
                 content = file.read()
             
-            new_content = re.sub(pattern_str, replacement_str, content)
-            new_content = re.sub(pattern_backtick, replacement_backtick, new_content)
+            new_content = re.sub(pattern_backtick, replacement_backtick, content)
             
             if new_content != content:
                 with open(path, 'w', encoding='utf-8') as file:

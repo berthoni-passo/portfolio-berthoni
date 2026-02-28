@@ -29,7 +29,7 @@ export default function LabPage() {
     ];
 
     useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/projects/`)
+        fetch(`/api/projects/`)
             .then(res => res.json())
             .then(data => {
                 if (Array.isArray(data)) {
