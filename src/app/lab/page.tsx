@@ -57,12 +57,12 @@ export default function LabPage() {
     return (
         <div style={{ minHeight: "100vh", background: "var(--bg-primary)" }}>
             <Navbar />
-            <section style={{ position: "relative", paddingTop: "120px", paddingBottom: "100px" }}>
+            <section style={{ position: "relative", paddingTop: "100px", paddingBottom: "80px" }}>
                 <ParticlesCanvas />
-                <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
+                <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 16px", position: "relative", zIndex: 1 }}>
 
-                    <div style={{ textAlign: "center", marginBottom: "60px" }}>
-                        <div className="section-badge">✦ Innovation</div>
+                    <div style={{ textAlign: "center", marginBottom: "40px" }}>
+                        <div className="section-badge"> Innovation</div>
                         <h1 style={{ marginBottom: "20px" }}>ML <span className="gradient-text">Lab</span></h1>
                         <p style={{ color: "var(--text-secondary)", maxWidth: "600px", margin: "0 auto" }}>
                             Espace expérimental hébergeant mes modèles de Machine Learning.
@@ -78,14 +78,24 @@ export default function LabPage() {
                             </div>
                         ) : (
                             <>
-                                {/* Tabs — natifs + dynamiques */}
-                                <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+                                {/* Tabs — scroll horizontal sur mobile */}
+                                <div style={{
+                                    display: "flex",
+                                    gap: "10px",
+                                    justifyContent: "center",
+                                    flexWrap: "wrap",
+                                    overflowX: "auto",
+                                    paddingBottom: "4px",
+                                    WebkitOverflowScrolling: "touch" as const,
+                                    scrollbarWidth: "none" as const,
+                                }}>
                                     {allDemos.map(demo => (
                                         <button
                                             key={demo.id}
                                             onClick={() => setActiveTab(demo.id)}
                                             style={{
-                                                padding: "12px 24px",
+                                                flexShrink: 0,
+                                                padding: "10px 18px",
                                                 borderRadius: "12px",
                                                 background: activeTab === demo.id ? "rgba(79, 142, 247, 0.1)" : "rgba(255, 255, 255, 0.02)",
                                                 border: activeTab === demo.id ? "1px solid var(--accent-blue)" : "1px solid var(--border)",
@@ -93,9 +103,11 @@ export default function LabPage() {
                                                 cursor: "pointer",
                                                 display: "flex",
                                                 alignItems: "center",
-                                                gap: "8px",
+                                                gap: "6px",
                                                 fontWeight: "600",
-                                                transition: "all 0.3s ease"
+                                                fontSize: "0.875rem",
+                                                transition: "all 0.3s ease",
+                                                whiteSpace: "nowrap" as const,
                                             }}
                                         >
                                             <span>{demo.icon}</span>
@@ -115,7 +127,7 @@ export default function LabPage() {
                                         </p>
                                     </div>
 
-                                    <div style={{ padding: activeDemo?.iframeUrl ? "0" : "32px", background: activeDemo?.iframeUrl ? "#0e1117" : "transparent", minHeight: "480px", position: "relative" }}>
+                                    <div style={{ padding: activeDemo?.iframeUrl ? "0" : "24px", background: activeDemo?.iframeUrl ? "#0e1117" : "transparent", minHeight: "360px", position: "relative" }}>
                                         {activeDemo?.iframeUrl ? (
                                             <>
                                                 <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", textAlign: "center", color: "var(--text-muted)" }}>

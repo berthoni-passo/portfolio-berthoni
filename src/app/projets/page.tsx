@@ -123,7 +123,7 @@ export default function ProjectsPage() {
                             className="section-badge"
                             style={{ margin: "0 auto 20px" }}
                         >
-                            ✦ Portfolio
+                            Portfolio
                         </motion.div>
                         <motion.h1
                             initial={{ opacity: 0, y: 20 }}

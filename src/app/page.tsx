@@ -170,26 +170,28 @@ export default function HomePage() {
           }}
         >
           {/* Main Content Layout */}
-          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "40px" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "20px" }}>
 
             {/* Colonne de Gauche : Textes, Profil, Boutons */}
             <div style={{
-              flex: "1 1 500px",
+              flex: "1 1 300px",
               zIndex: 2,
-              padding: "32px",
+              padding: "16px",
               borderRadius: "24px",
               background: "transparent",
               backdropFilter: "none",
               border: "none",
+              width: "100%",
             }}>
               {/* ─── Profile Card (top-left) ─── */}
               <div
                 style={{
                   display: "flex",
                   alignItems: "flex-start",
-                  gap: "20px",
-                  marginBottom: "48px",
+                  gap: "14px",
+                  marginBottom: "32px",
                   animation: "fadeInUp 0.6s ease forwards",
+                  flexWrap: "wrap",
                 }}
               >
                 {/* Avatar */}
@@ -340,13 +342,13 @@ export default function HomePage() {
 
               {/* ─── CTA Buttons ─── */}
               <div
-                style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginBottom: "56px" }}
+                style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginBottom: "40px" }}
                 className="fade-in-up"
               >
-                <Link href="/projets" className="btn-primary">
+                <Link href="/projets" className="btn-primary" style={{ flex: "1 1 auto" }}>
                   🚀 Voir mes projets
                 </Link>
-                <Link href="/a-propos" className="btn-secondary">
+                <Link href="/a-propos" className="btn-secondary" style={{ flex: "1 1 auto" }}>
                   📄 Télécharger mon CV
                 </Link>
               </div>
@@ -369,8 +371,8 @@ export default function HomePage() {
               <div
                 style={{
                   display: "grid",
-                  gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))",
-                  gap: "16px",
+                  gridTemplateColumns: "repeat(auto-fit, minmax(110px, 1fr))",
+                  gap: "12px",
                 }}
               >
                 {stats.map((s) => (

@@ -11,7 +11,7 @@ export default function AboutPage() {
                 <ParticlesCanvas />
 
                 <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "0 24px", position: "relative", zIndex: 1 }}>
-                    <div className="section-badge">✦ Mon Parcours</div>
+                    <div className="section-badge"> Mon Parcours</div>
                     <h1 style={{ marginBottom: "32px" }}>
                         À propos de <span className="gradient-text">Berthoni Passo</span>
                     </h1>
