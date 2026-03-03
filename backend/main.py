@@ -42,8 +42,9 @@ app.include_router(emotion.router)
 
 # ── CORS strict ──────────────────────────────────────────────
 ALLOWED_ORIGINS = [
-    os.getenv("NEXT_PUBLIC_SITE_URL", "http://localhost:3000"),
+    os.getenv("NEXT_PUBLIC_SITE_URL", "http://portfolio-berthoni-web.s3-website.eu-west-3.amazonaws.com"),
     "http://localhost:3000",
+    "http://portfolio-berthoni-web.s3-website.eu-west-3.amazonaws.com",
     "https://berthonipassoportfolio.com",
     "http://berthonipassoportfolio.com",
 ]
