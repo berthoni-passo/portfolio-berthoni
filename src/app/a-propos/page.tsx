@@ -42,7 +42,7 @@ export default function AboutPage() {
                                     download
                                     className="btn-primary"
                                     onClick={() => {
-                                        fetch(`/api/analytics/`, {
+                                        fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/${process.env.NEXT_PUBLIC_API_URL || ''}/api//analytics/`, {
                                             method: "POST",
                                             headers: { "Content-Type": "application/json" },
                                             body: JSON.stringify({ event_type: "cv_download" })

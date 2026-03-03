@@ -33,7 +33,7 @@ export default function LabPage() {
     ];
 
     useEffect(() => {
-        fetch(`/api/projects/`)
+        fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/${process.env.NEXT_PUBLIC_API_URL || ''}/api//projects/`)
             .then(res => res.json())
             .then(data => {
                 if (Array.isArray(data)) {

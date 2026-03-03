@@ -12,7 +12,7 @@ export default function ContactPage() {
         setStatus("submitting");
 
         try {
-            const res = await fetch(`/api/interactions/contact`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/${process.env.NEXT_PUBLIC_API_URL || ''}/api//interactions/contact`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formState)

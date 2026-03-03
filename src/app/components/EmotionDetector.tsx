@@ -182,7 +182,7 @@ export default function EmotionDetector() {
 
         try {
             const res = await fetch(
-                `/api/ml/emotion`,
+                `${process.env.NEXT_PUBLIC_API_URL || ""}/${process.env.NEXT_PUBLIC_API_URL || ''}/api//ml/emotion`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -222,7 +222,7 @@ export default function EmotionDetector() {
             }
 
             // Track analytics
-            fetch(`/api/analytics/`, {
+            fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/analytics/`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ event_type: "ml_emotion_test" })

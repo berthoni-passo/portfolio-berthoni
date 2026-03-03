@@ -42,7 +42,7 @@ export default function ProjectDetail({ params }: { params: Promise<{ id: string
         setVisitorId(vId);
 
         // Fetch project data (avec mock si API non dispo)
-        fetch(`/api/projects/${id}`)
+        fetch(`/${process.env.NEXT_PUBLIC_API_URL || ''}/api//projects/${id}`)
             .then(res => {
                 if (!res.ok) {
                     throw new Error("Projet non trouvé via API");
