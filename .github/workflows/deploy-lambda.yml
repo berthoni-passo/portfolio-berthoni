@@ -1,0 +1,44 @@
+name: Deploy FastAPI to AWS Lambda
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Create Deployment Package
+        run: |
+          cd backend
+          mkdir package
+          pip install -r requirements.txt -t package/
+          cp -r *.py data/ routers/ services/ package/
+          cd package
+          zip -r9 ../deployment_package.zip .
+          cd ..
+          
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-3
+
+      - name: Deploy to AWS Lambda
+        run: |
+          # Assurez-vous que la fonction Lambda 'portfolio-backend-api' existe déjà sur AWS
+          aws lambda update-function-code \
+            --function-name portfolio-backend-api \
+            --zip-file fileb://backend/deployment_package.zip
