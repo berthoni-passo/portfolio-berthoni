@@ -103,3 +103,10 @@ def read_dashboard(db: Session = Depends(database.get_db)):
     total_likes = db.query(models.Like).count()
     total_projects = db.query(models.Project).count()
     return {"metrics": {"likes": total_likes, "projects": total_projects}}
+
+# --- AWS Lambda Handler ---
+try:
+    from mangum import Mangum
+    handler = Mangum(app)
+except ImportError:
+    pass
