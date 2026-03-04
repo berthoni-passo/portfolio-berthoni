@@ -42,18 +42,19 @@ app.include_router(emotion.router)
 
 # ── CORS strict ──────────────────────────────────────────────
 ALLOWED_ORIGINS = [
-    os.getenv("NEXT_PUBLIC_SITE_URL", "http://portfolio-berthoni-web.s3-website.eu-west-3.amazonaws.com"),
-    "http://localhost:3000",
     "http://portfolio-berthoni-web.s3-website.eu-west-3.amazonaws.com",
+    "https://portfolio-berthoni-web.s3-website.eu-west-3.amazonaws.com",
+    "http://localhost:3000",
     "https://berthonipassoportfolio.com",
     "http://berthonipassoportfolio.com",
+    "*"  # Fallback temporaire pour débloquer le réseau
 ]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS,
-    allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE"],  # pas PATCH, pas OPTIONS
-    allow_headers=["Content-Type", "Authorization"],  # whitelist explicite
+    allow_origins=["*"],  # Permettre toutes les origines temporairement pour vaincre le CORS
+    allow_credentials=False, # Doit être False si allow_origins=["*"]
+    allow_methods=["*"],  # Inclut OPTIONS crucial pour le preflight
+    allow_headers=["*"],
 )
 
 # ── Security Headers ─────────────────────────────────────────
