@@ -49,4 +49,5 @@ jobs:
             
           aws lambda update-function-configuration \
             --function-name portfolio-backend-api \
-            --environment "Variables={ORACLE_USER=system,ORACLE_PASSWORD=OraclePassword2026!,ORACLE_HOST_PORT=15.236.38.79:1521,ORACLE_SERVICE=FREEPDB1,S3_BUCKET_NAME=portfolio-berthoni-assets}"
+            --environment "Variables={ORACLE_USER=admin,ORACLE_PASSWORD=OraclePassword2026!,ORACLE_HOST_PORT=15.236.38.79:1521,ORACLE_SERVICE=FREEPDB1,S3_BUCKET_NAME=portfolio-berthoni-assets,AWS_REKOGNITION_REGION=eu-west-1,ENV=production}"
+
