@@ -9,7 +9,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -25,6 +25,7 @@ jobs:
           mkdir package
           pip install -r requirements.txt -t package/
           cp -r *.py data/ routers/ services/ package/
+          find package -type d -exec touch {}/__init__.py \;
           cd package
           zip -r9 ../deployment_package.zip .
           cd ..
