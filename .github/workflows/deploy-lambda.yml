@@ -38,7 +38,14 @@ jobs:
 
       - name: Deploy to AWS Lambda
         run: |
-          # Assurez-vous que la fonction Lambda 'portfolio-backend-api' existe déjà sur AWS
           aws lambda update-function-code \
             --function-name portfolio-backend-api \
             --zip-file fileb://backend/deployment_package.zip
+            
+          # Wait for the update to complete before modifying config
+          aws lambda wait function-updated \
+            --function-name portfolio-backend-api
+            
+          aws lambda update-function-configuration \
+            --function-name portfolio-backend-api \
+            --environment "Variables={ORACLE_USER=system,ORACLE_PASSWORD=OraclePassword2026!,ORACLE_HOST_PORT=15.236.38.79:1521,ORACLE_SERVICE=FREEPDB1,S3_BUCKET_NAME=portfolio-berthoni-assets}"
