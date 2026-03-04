@@ -44,6 +44,7 @@ app.include_router(emotion.router)
 ALLOWED_ORIGINS = [
     "http://portfolio-berthoni-web.s3-website.eu-west-3.amazonaws.com",
     "https://portfolio-berthoni-web.s3-website.eu-west-3.amazonaws.com",
+    "https://d1s9e8gi4rbvcl.cloudfront.net",  # CloudFront HTTPS
     "http://localhost:3000",
     "https://berthonipassoportfolio.com",
     "http://berthonipassoportfolio.com",
