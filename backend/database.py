@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-load_dotenv()
+load_dotenv(override=True)
 
 USER = os.getenv("ORACLE_USER", "system")
 PASSWORD = os.getenv("ORACLE_PASSWORD", "OraclePassword2026!")
