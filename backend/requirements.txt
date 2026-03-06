@@ -10,3 +10,4 @@ boto3
 slowapi
 bcrypt
 mangum
+httpx

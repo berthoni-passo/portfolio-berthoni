@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, BackgroundTasks
 from sqlalchemy.orm import Session
 from typing import List
 
 import models, schemas
 from database import get_db
 from services import s3_service
+from services.github_service import trigger_frontend_build
 from auth import get_current_admin_user
 
 router = APIRouter(
@@ -62,7 +63,7 @@ def read_project(project_id: int, db: Session = Depends(get_db)):
     return project
 
 @router.post("/", response_model=schemas.Project)
-def create_project(project: schemas.ProjectCreate, db: Session = Depends(get_db)):
+def create_project(project: schemas.ProjectCreate, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     """
     [Admin] Crée un nouveau projet dans le portfolio.
     Pour l'instant la route est ouverte pour tester, mais on ajoutera le décorateur Admin plus tard.
@@ -71,12 +72,17 @@ def create_project(project: schemas.ProjectCreate, db: Session = Depends(get_db)
     db.add(db_project)
     db.commit()
     db.refresh(db_project)
+    
+    # 🚀 Déclenche le Webhook GitHub Actions pour regénérer le site statique
+    background_tasks.add_task(trigger_frontend_build)
+    
     return db_project
 
 @router.put("/{project_id}", response_model=schemas.Project)
 def update_project(
     project_id: int, 
     project_update: schemas.ProjectUpdate, 
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db), 
     current_admin: models.User = Depends(get_current_admin_user)
 ):
@@ -93,10 +99,14 @@ def update_project(
         
     db.commit()
     db.refresh(project)
+    
+    # 🚀 Déclenche le Webhook GitHub Actions pour regénérer le site statique
+    background_tasks.add_task(trigger_frontend_build)
+    
     return project
 
 @router.delete("/{project_id}", status_code=204)
-def delete_project(project_id: int, db: Session = Depends(get_db), current_admin: models.User = Depends(get_current_admin_user)):
+def delete_project(project_id: int, background_tasks: BackgroundTasks, db: Session = Depends(get_db), current_admin: models.User = Depends(get_current_admin_user)):
     """
     [Admin] Supprime un projet du portfolio ainsi que ses données associées.
     """
@@ -112,6 +122,10 @@ def delete_project(project_id: int, db: Session = Depends(get_db), current_admin
     
     db.delete(project)
     db.commit()
+    
+    # 🚀 Déclenche le Webhook GitHub Actions pour regénérer le site statique
+    background_tasks.add_task(trigger_frontend_build)
+    
     return None
 
 @router.post("/{project_id}/images", response_model=schemas.ProjectImage)

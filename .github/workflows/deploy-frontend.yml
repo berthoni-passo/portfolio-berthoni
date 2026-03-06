@@ -1,0 +1,50 @@
+name: Deploy Frontend to S3 and CloudFront
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'components/**'
+      - 'next.config.ts'
+      - 'package.json'
+  repository_dispatch:
+    types: [trigger_frontend_build]
+  workflow_dispatch: # Permet de lancer manuellement depuis l'interface GitHub
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Next.js Static Export
+        env:
+          NEXT_PUBLIC_API_URL: https://www.berthonipassoportfolio.com
+        run: npm run build
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-3
+
+      - name: Sync to AWS S3
+        run: |
+          aws s3 sync out s3://portfolio-berthoni-web --delete
+
+      - name: Invalidate CloudFront Cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id E1Q371LL161SYQ --paths "/*"
