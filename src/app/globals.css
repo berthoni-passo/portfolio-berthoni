@@ -186,6 +186,11 @@ a {
   transform: translateY(-2px);
 }
 
+.btn-secondary:active {
+  transform: translateY(0);
+  background: rgba(79, 142, 247, 0.15);
+}
+
 /* ─── Section ─── */
 .section {
   padding: 100px 0;

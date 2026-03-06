@@ -76,7 +76,7 @@ export default function Chatbot() {
         setIsLoading(true);
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/${process.env.NEXT_PUBLIC_API_URL || ''}/api//rag/chat?question=${encodeURIComponent(userMsg.content)}`, {
+            const res = await fetch(`https://www.berthonipassoportfolio.com/api/rag/chat?question=${encodeURIComponent(userMsg.content)}`, {
                 method: "POST"
             });
 
@@ -90,23 +90,23 @@ export default function Chatbot() {
             const botMsgId = (Date.now() + 1).toString();
             setMessages(prev => [...prev, { id: botMsgId, role: "bot", content: "" }]);
 
-            // 2. On lit le flux continu
-            const reader = res.body.getReader();
-            const decoder = new TextDecoder("utf-8");
-            let done = false;
-            let currentText = "";
+            // 2. AWS API Gateway bloque le streaming HTTP natif (buffering) 
+            // Donc on lit le texte complet puis on simule le streaming c├┤t├® client
+            const fullText = await res.text();
 
-            while (!done) {
-                const { value, done: readerDone } = await reader.read();
-                done = readerDone;
-                if (value) {
-                    const chunk = decoder.decode(value, { stream: !done });
-                    currentText += chunk;
-                    // Mise à jour frame par frame (React batchera les états)
+            let currentText = "";
+            for (let i = 0; i < fullText.length; i++) {
+                currentText += fullText[i];
+
+                // Mettre à jour l'état uniquement tous les 2 ou 3 caract├¿res pour les performances
+                if (i % 2 === 0 || i === fullText.length - 1) {
                     setMessages(prev => prev.map(msg =>
                         msg.id === botMsgId ? { ...msg, content: currentText } : msg
                     ));
                 }
+
+                // Pause de 10ms pour simuler le LLM
+                await new Promise(r => setTimeout(r, 10));
             }
 
         } catch (error) {

@@ -1,0 +1,7 @@
+{
+  "ORACLE_PASSWORD": "OraclePassword2026!",
+  "ORACLE_HOST_PORT": "35.180.51.206:1521",
+  "ORACLE_SERVICE": "FREEPDB1",
+  "S3_BUCKET_NAME": "portfolio-berthoni-assets",
+  "ORACLE_USER": "system"
+}

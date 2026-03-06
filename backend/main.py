@@ -42,13 +42,12 @@ app.include_router(emotion.router)
 
 # ── CORS strict ──────────────────────────────────────────────
 ALLOWED_ORIGINS = [
-    "http://portfolio-berthoni-web.s3-website.eu-west-3.amazonaws.com",
-    "https://portfolio-berthoni-web.s3-website.eu-west-3.amazonaws.com",
-    "https://d1s9e8gi4rbvcl.cloudfront.net",  # CloudFront HTTPS
     "http://localhost:3000",
     "https://berthonipassoportfolio.com",
     "http://berthonipassoportfolio.com",
-    "*"  # Fallback temporaire pour débloquer le réseau
+    "https://www.berthonipassoportfolio.com",
+    "https://d1s9e8gi4rbvcl.cloudfront.net",
+    "http://35.180.51.206",
 ]
 app.add_middleware(
     CORSMiddleware,

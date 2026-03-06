@@ -1,0 +1,16 @@
+[Unit]
+Description=Portfolio FastAPI Backend
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Type=exec
+User=ec2-user
+WorkingDirectory=/home/ec2-user/portfolio-berthoni/backend
+EnvironmentFile=/home/ec2-user/portfolio-berthoni/backend/.env
+ExecStart=/usr/bin/python3 -m uvicorn main:app --host 127.0.0.1 --port 8000
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

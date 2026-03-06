@@ -75,43 +75,107 @@ export default function Navbar() {
                 }}
                 className="desktop-nav"
             >
-                {navLinks.map((link) => (
+                {pathname.startsWith("/admin") ? (
+                    <>
+                        <Link
+                            href="/admin/dashboard"
+                            style={{
+                                padding: "8px 16px",
+                                borderRadius: "8px",
+                                fontSize: "0.9rem",
+                                fontWeight: "600",
+                                color: pathname === "/admin/dashboard" ? "var(--accent-blue)" : "var(--text-secondary)",
+                                background: pathname === "/admin/dashboard" ? "rgba(79,142,247,0.12)" : "transparent",
+                                textDecoration: "none",
+                            }}
+                        >
+                            📊 Dashboard
+                        </Link>
+                        <Link
+                            href="/admin/projects"
+                            style={{
+                                padding: "8px 16px",
+                                borderRadius: "8px",
+                                fontSize: "0.9rem",
+                                fontWeight: "600",
+                                color: pathname === "/admin/projects" ? "var(--accent-blue)" : "var(--text-secondary)",
+                                background: pathname === "/admin/projects" ? "rgba(79,142,247,0.12)" : "transparent",
+                                textDecoration: "none",
+                            }}
+                        >
+                            📁 Projets
+                        </Link>
+                        <Link
+                            href="/admin/comments"
+                            style={{
+                                padding: "8px 16px",
+                                borderRadius: "8px",
+                                fontSize: "0.9rem",
+                                fontWeight: "600",
+                                color: pathname === "/admin/comments" ? "var(--accent-blue)" : "var(--text-secondary)",
+                                background: pathname === "/admin/comments" ? "rgba(79,142,247,0.12)" : "transparent",
+                                textDecoration: "none",
+                            }}
+                        >
+                            💬 Commentaires
+                        </Link>
+                        <Link
+                            href="/admin/analytics"
+                            style={{
+                                padding: "8px 16px",
+                                borderRadius: "8px",
+                                fontSize: "0.9rem",
+                                fontWeight: "600",
+                                color: pathname === "/admin/analytics" ? "var(--accent-blue)" : "var(--text-secondary)",
+                                background: pathname === "/admin/analytics" ? "rgba(79,142,247,0.12)" : "transparent",
+                                textDecoration: "none",
+                            }}
+                        >
+                            📈 Stats
+                        </Link>
+                    </>
+                ) : (
+                    navLinks.map((link) => {
+                        const isActive = link.href === "/"
+                            ? pathname === "/"
+                            : pathname === link.href || pathname.startsWith(link.href + "/");
+                        return (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                style={{
+                                    padding: "8px 16px",
+                                    borderRadius: "8px",
+                                    fontSize: "0.9rem",
+                                    fontWeight: isActive ? "600" : "500",
+                                    color: isActive ? "var(--accent-blue)" : "var(--text-secondary)",
+                                    background: isActive ? "rgba(79,142,247,0.12)" : "transparent",
+                                    transition: "all 0.2s ease",
+                                    textDecoration: "none",
+                                }}
+                            >
+                                {link.label}
+                            </Link>
+                        );
+                    })
+                )}
+                {!pathname.startsWith("/admin") && (
                     <Link
-                        key={link.href}
-                        href={link.href}
+                        href="/contact"
                         style={{
-                            padding: "8px 16px",
+                            marginLeft: "12px",
+                            padding: "8px 20px",
                             borderRadius: "8px",
-                            fontSize: "0.9rem",
-                            fontWeight: "500",
-                            color:
-                                pathname === link.href
-                                    ? "var(--accent-blue)"
-                                    : "var(--text-secondary)",
-                            background:
-                                pathname === link.href
-                                    ? "rgba(79,142,247,0.1)"
-                                    : "transparent",
-                            transition: "all 0.2s ease",
+                            background: "linear-gradient(135deg, #4f8ef7, #8b5cf6)",
+                            color: "white",
+                            fontWeight: "600",
+                            fontSize: "0.875rem",
+                            textDecoration: "none",
                         }}
                     >
-                        {link.label}
+                        Me Contacter
                     </Link>
-                ))}
-                <Link
-                    href="/contact"
-                    style={{
-                        marginLeft: "12px",
-                        padding: "8px 20px",
-                        borderRadius: "8px",
-                        background: "linear-gradient(135deg, #4f8ef7, #8b5cf6)",
-                        color: "white",
-                        fontWeight: "600",
-                        fontSize: "0.875rem",
-                    }}
-                >
-                    Me Contacter
-                </Link>
+                )}
             </div>
 
             {/* Mobile Menu Button */}

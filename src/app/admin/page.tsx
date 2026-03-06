@@ -22,7 +22,7 @@ export default function AdminLogin() {
             formData.append("username", email);
             formData.append("password", password);
 
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/${process.env.NEXT_PUBLIC_API_URL || ''}/api//auth/token`, {
+            const res = await fetch(`https://www.berthonipassoportfolio.com/api/auth/token`, {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: formData.toString(),

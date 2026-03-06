@@ -4,6 +4,7 @@ from typing import List
 
 import models, schemas
 from database import get_db
+from auth import get_current_admin_user
 from services import email_service
 
 router = APIRouter(
@@ -31,6 +32,26 @@ def create_comment(comment: schemas.CommentCreate, project_id: int, db: Session 
     db.commit()
     db.refresh(db_comment)
     return db_comment
+
+@router.get("/comments", response_model=List[schemas.Comment], dependencies=[Depends(get_current_admin_user)])
+def get_all_comments(db: Session = Depends(get_db)):
+    """
+    Récupère tous les commentaires (Admin uniquement).
+    """
+    return db.query(models.Comment).order_by(models.Comment.created_at.desc()).all()
+
+@router.delete("/comments/{comment_id}", dependencies=[Depends(get_current_admin_user)])
+def delete_comment(comment_id: int, db: Session = Depends(get_db)):
+    """
+    Supprime un commentaire par son ID (Admin uniquement).
+    """
+    comment = db.query(models.Comment).filter(models.Comment.id == comment_id).first()
+    if not comment:
+        raise HTTPException(status_code=404, detail="Commentaire non trouvé")
+    
+    db.delete(comment)
+    db.commit()
+    return {"status": "success", "message": "Commentaire supprimé"}
 
 # --- Likes ---
 @router.post("/likes")

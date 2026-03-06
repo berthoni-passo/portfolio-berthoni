@@ -1,0 +1,8 @@
+[
+    {
+        "Id": "stop-instance",
+        "Arn": "arn:aws:ssm:eu-west-3:699773898555:automation-definition/AWS-StopEC2Instance",
+        "RoleArn": "arn:aws:iam::699773898555:role/service-role/Amazon_EventBridge_Invoke_SSM_Automation_1748041",
+        "Input": "{\"InstanceId\":[\"i-0f2feed2864ba1cc0\"],\"AutomationAssumeRole\":[\"arn:aws:iam::699773898555:role/service-role/Amazon_EventBridge_Invoke_SSM_Automation_1748041\"]}"
+    }
+]

@@ -19,8 +19,11 @@ export default function AdminDashboard() {
     }, [router]);
 
     const handleLogout = () => {
+        console.log("Logout triggered");
         localStorage.removeItem("admin_token");
-        router.push("/admin");
+        sessionStorage.clear(); // Nettoyage supplémentaire
+        // Forcer un rechargement complet vers la racine admin
+        window.location.replace("/admin");
     };
 
     if (!isAuthenticated) return null; // Prévention flash de contenu
@@ -32,11 +35,25 @@ export default function AdminDashboard() {
             <main style={{ maxWidth: "1200px", margin: "0 auto", padding: "120px 24px 60px" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "40px", borderBottom: "1px solid var(--border)", paddingBottom: "20px" }}>
                     <div>
-                        <h1 style={{ fontSize: "2rem", marginBottom: "8px" }}>Dashboard <span className="gradient-text">Administrateur</span></h1>
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                            <h1 style={{ fontSize: "2rem", marginBottom: "8px" }}>Dashboard <span className="gradient-text">Administrateur</span></h1>
+                            <span style={{ fontSize: "0.7rem", background: "rgba(255,255,255,0.1)", padding: "2px 8px", borderRadius: "4px", color: "var(--text-muted)" }}>v2.0.1</span>
+                        </div>
                         <p style={{ color: "var(--text-muted)" }}>Gérez vos projets, analysez votre trafic et administrez la base Oracle 23ai.</p>
                     </div>
-                    <button onClick={handleLogout} className="btn-secondary" style={{ borderColor: "#ef4444", color: "#ef4444" }}>
-                        Déconnexion
+                    <button
+                        onClick={handleLogout}
+                        className="btn-secondary"
+                        style={{
+                            borderColor: "#ef4444",
+                            color: "#ef4444",
+                            fontWeight: "600",
+                            transition: "all 0.2s ease",
+                            cursor: "pointer",
+                            zIndex: 1000 // Force le clic au-dessus de tout
+                        }}
+                    >
+                        🏃 Déconnexion
                     </button>
                 </div>
 
@@ -51,6 +68,20 @@ export default function AdminDashboard() {
                         <Link href="/admin/projects" style={{ textDecoration: "none" }}>
                             <button className="btn-primary" style={{ width: "100%", padding: "12px", fontSize: "0.9rem" }}>
                                 Gérer les Projets
+                            </button>
+                        </Link>
+                    </div>
+
+                    {/* Widget : Modération des Commentaires */}
+                    <div className="glass-card fade-in-up" style={{ padding: "32px", borderTop: "3px solid var(--accent-orange)", animationDelay: "0.05s" }}>
+                        <div style={{ fontSize: "2rem", marginBottom: "16px" }}>💬</div>
+                        <h2 style={{ fontSize: "1.2rem", marginBottom: "12px" }}>Commentaires</h2>
+                        <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem", marginBottom: "24px", lineHeight: "1.5" }}>
+                            Lisez et modérez les retours des visiteurs. Supprimez les messages indésirables.
+                        </p>
+                        <Link href="/admin/comments" style={{ textDecoration: "none" }}>
+                            <button className="btn-secondary" style={{ width: "100%", padding: "12px", fontSize: "0.9rem" }}>
+                                Modérer les commentaires
                             </button>
                         </Link>
                     </div>

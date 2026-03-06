@@ -1,0 +1,63 @@
+﻿{
+    "Quantity": 2,
+    "Items": [
+        {
+            "Id": "EC2Backend",
+            "DomainName": "ec2-35-180-51-206.eu-west-3.compute.amazonaws.com",
+            "OriginPath": "",
+            "CustomHeaders": {
+                "Quantity": 0
+            },
+            "CustomOriginConfig": {
+                "HTTPPort": 80,
+                "HTTPSPort": 443,
+                "OriginProtocolPolicy": "http-only",
+                "OriginSslProtocols": {
+                    "Quantity": 3,
+                    "Items": [
+                        "TLSv1",
+                        "TLSv1.1",
+                        "TLSv1.2"
+                    ]
+                },
+                "OriginReadTimeout": 30,
+                "OriginKeepaliveTimeout": 5
+            },
+            "ConnectionAttempts": 3,
+            "ConnectionTimeout": 10,
+            "OriginShield": {
+                "Enabled": false
+            },
+            "OriginAccessControlId": ""
+        },
+        {
+            "Id": "S3-portfolio-berthoni-web",
+            "DomainName": "portfolio-berthoni-web.s3-website.eu-west-3.amazonaws.com",
+            "OriginPath": "",
+            "CustomHeaders": {
+                "Quantity": 0
+            },
+            "CustomOriginConfig": {
+                "HTTPPort": 80,
+                "HTTPSPort": 443,
+                "OriginProtocolPolicy": "http-only",
+                "OriginSslProtocols": {
+                    "Quantity": 3,
+                    "Items": [
+                        "TLSv1",
+                        "TLSv1.1",
+                        "TLSv1.2"
+                    ]
+                },
+                "OriginReadTimeout": 30,
+                "OriginKeepaliveTimeout": 5
+            },
+            "ConnectionAttempts": 3,
+            "ConnectionTimeout": 10,
+            "OriginShield": {
+                "Enabled": false
+            },
+            "OriginAccessControlId": ""
+        }
+    ]
+}

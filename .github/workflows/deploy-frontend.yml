@@ -31,7 +31,7 @@ jobs:
 
       - name: Build Next.js Static Export
         env:
-          NEXT_PUBLIC_API_URL: https://www.berthonipassoportfolio.com
+          NEXT_PUBLIC_API_URL: "https://www.berthonipassoportfolio.com"
         run: npm run build
 
       - name: Configure AWS Credentials
